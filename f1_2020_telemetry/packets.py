@@ -142,12 +142,12 @@ class PacketMotionData_V1(PackedLittleEndianStructure):
     used to pack the data and on the assumption that direction values are always between -1.0f and 1.0f.
 
     Frequency: Rate as specified in menus
-    Size: 1343 bytes
+    Size: 1464 bytes
     Version: 1
     """
     _fields_ = [
         ('header'                 , PacketHeader         ),  # Header
-        ('carMotionData'          , CarMotionData_V1 * 20),  # Data for all cars on track
+        ('carMotionData'          , CarMotionData_V1 * 22),  # Data for all cars on track
         # Extra player car ONLY data
         ('suspensionPosition'     , ctypes.c_float * 4   ),  # Note: All wheel arrays have the following order:
         ('suspensionVelocity'     , ctypes.c_float * 4   ),  # RL, RR, FL, FR
@@ -180,39 +180,55 @@ class MarshalZone_V1(PackedLittleEndianStructure):
     ]
 
 
+class WeatherForecastSample(PackedLittleEndianStructure):
+    """This type is used for the 20-element 'weatherForecastSamples' array of the PacketSessionData_V1 type, defined below."""
+    _fields_ = [
+        ('sessionType'     , ctypes.c_uint8),  # 0 = unknown, 1 = P1, 2 = P2, 3 = P3, 4 = Short P
+                                               # 5 = Q1, 6 = Q2, 7 = Q3, 8 = Short Q, 9 = OSQ
+                                               # 10 = R, 11 = R2, 12 = Time Trial
+        ('timeOffset'      , ctypes.c_uint8),  # Time in minutes the forecast is for
+        ('weather'         , ctypes.c_uint8),  # Weather - 0 = clear, 1 = light cloud, 2 = overcast
+                                               # 3 = light rain, 4 = heavy rain, 5 = storm
+        ('trackTemperature', ctypes.c_int8),   # Track temp. in degrees celsius
+        ('airTemperature'  , ctypes.c_int8),   # Air temp. in degrees celsius
+    ]
+
+
 class PacketSessionData_V1(PackedLittleEndianStructure):
     """The session packet includes details about the current session in progress.
 
     Frequency: 2 per second
-    Size: 149 bytes
+    Size: 251 bytes
     Version: 1
     """
     _fields_ = [
-        ('header'              , PacketHeader       ),  # Header
-        ('weather'             , ctypes.c_uint8     ),  # Weather - 0 = clear, 1 = light cloud, 2 = overcast
-                                                        # 3 = light rain, 4 = heavy rain, 5 = storm
-        ('trackTemperature'    , ctypes.c_int8      ),  # Track temp. in degrees celsius
-        ('airTemperature'      , ctypes.c_int8      ),  # Air temp. in degrees celsius
-        ('totalLaps'           , ctypes.c_uint8     ),  # Total number of laps in this race
-        ('trackLength'         , ctypes.c_uint16    ),  # Track length in metres
-        ('sessionType'         , ctypes.c_uint8     ),  # 0 = unknown, 1 = P1, 2 = P2, 3 = P3, 4 = Short P
-                                                        # 5 = Q1, 6 = Q2, 7 = Q3, 8 = Short Q, 9 = OSQ
-                                                        # 10 = R, 11 = R2, 12 = Time Trial
-        ('trackId'             , ctypes.c_int8      ),  # -1 for unknown, 0-21 for tracks, see appendix
-        ('m_formula'           , ctypes.c_uint8     ),  # Formula, 0 = F1 Modern, 1 = F1 Classic, 2 = F2,
-                                                        # 3 = F1 Generic
-        ('sessionTimeLeft'     , ctypes.c_uint16    ),  # Time left in session in seconds
-        ('sessionDuration'     , ctypes.c_uint16    ),  # Session duration in seconds
-        ('pitSpeedLimit'       , ctypes.c_uint8     ),  # Pit speed limit in kilometres per hour
-        ('gamePaused'          , ctypes.c_uint8     ),  # Whether the game is paused
-        ('isSpectating'        , ctypes.c_uint8     ),  # Whether the player is spectating
-        ('spectatorCarIndex'   , ctypes.c_uint8     ),  # Index of the car being spectated
-        ('sliProNativeSupport' , ctypes.c_uint8     ),  # SLI Pro support, 0 = inactive, 1 = active
-        ('numMarshalZones'     , ctypes.c_uint8     ),  # Number of marshal zones to follow
-        ('marshalZones'        , MarshalZone_V1 * 21),  # List of marshal zones – max 21
-        ('safetyCarStatus'     , ctypes.c_uint8     ),  # 0 = no safety car, 1 = full safety car
-                                                        # 2 = virtual safety car
-        ('networkGame'         , ctypes.c_uint8     )   # 0 = offline, 1 = online
+        ('header'                   , PacketHeader       ),  # Header
+        ('weather'                  , ctypes.c_uint8     ),  # Weather - 0 = clear, 1 = light cloud, 2 = overcast
+                                                             # 3 = light rain, 4 = heavy rain, 5 = storm
+        ('trackTemperature'         , ctypes.c_int8      ),  # Track temp. in degrees celsius
+        ('airTemperature'           , ctypes.c_int8      ),  # Air temp. in degrees celsius
+        ('totalLaps'                , ctypes.c_uint8     ),  # Total number of laps in this race
+        ('trackLength'              , ctypes.c_uint16    ),  # Track length in metres
+        ('sessionType'              , ctypes.c_uint8     ),  # 0 = unknown, 1 = P1, 2 = P2, 3 = P3, 4 = Short P
+                                                             # 5 = Q1, 6 = Q2, 7 = Q3, 8 = Short Q, 9 = OSQ
+                                                             # 10 = R, 11 = R2, 12 = Time Trial
+        ('trackId'                  , ctypes.c_int8      ),  # -1 for unknown, 0-21 for tracks, see appendix
+        ('m_formula'                , ctypes.c_uint8     ),  # Formula, 0 = F1 Modern, 1 = F1 Classic, 2 = F2,
+                                                             # 3 = F1 Generic
+        ('sessionTimeLeft'          , ctypes.c_uint16    ),  # Time left in session in seconds
+        ('sessionDuration'          , ctypes.c_uint16    ),  # Session duration in seconds
+        ('pitSpeedLimit'            , ctypes.c_uint8     ),  # Pit speed limit in kilometres per hour
+        ('gamePaused'               , ctypes.c_uint8     ),  # Whether the game is paused
+        ('isSpectating'             , ctypes.c_uint8     ),  # Whether the player is spectating
+        ('spectatorCarIndex'        , ctypes.c_uint8     ),  # Index of the car being spectated
+        ('sliProNativeSupport'      , ctypes.c_uint8     ),  # SLI Pro support, 0 = inactive, 1 = active
+        ('numMarshalZones'          , ctypes.c_uint8     ),  # Number of marshal zones to follow
+        ('marshalZones'             , MarshalZone_V1 * 21),  # List of marshal zones – max 21
+        ('safetyCarStatus'          , ctypes.c_uint8     ),  # 0 = no safety car, 1 = full safety car
+                                                             # 2 = virtual safety car
+        ('networkGame'              , ctypes.c_uint8     ),  # 0 = offline, 1 = online
+        ('numWeatherForecastSamples', ctypes.c_uint8),       # Number of weather samples to follow
+        ('weatherForecastSamples'   , WeatherForecastSample * 20)  # Array of weather forecast samples
     ]
 
 ###########################################################
@@ -222,31 +238,41 @@ class PacketSessionData_V1(PackedLittleEndianStructure):
 ###########################################################
 
 class LapData_V1(PackedLittleEndianStructure):
-    """This type is used for the 20-element 'lapData' array of the PacketLapData_V1 type, defined below."""
+    """This type is used for the 22-element 'lapData' array of the PacketLapData_V1 type, defined below."""
     _fields_ = [
 
-        ('lastLapTime'       , ctypes.c_float),  # Last lap time in seconds
-        ('currentLapTime'    , ctypes.c_float),  # Current time around the lap in seconds
-        ('bestLapTime'       , ctypes.c_float),  # Best lap time of the session in seconds
-        ('sector1Time'       , ctypes.c_float),  # Sector 1 time in seconds
-        ('sector2Time'       , ctypes.c_float),  # Sector 2 time in seconds
-        ('lapDistance'       , ctypes.c_float),  # Distance vehicle is around current lap in metres – could
-                                                 # be negative if line hasn’t been crossed yet
-        ('totalDistance'     , ctypes.c_float),  # Total distance travelled in session in metres – could
-                                                 # be negative if line hasn’t been crossed yet
-        ('safetyCarDelta'    , ctypes.c_float),  # Delta in seconds for safety car
-        ('carPosition'       , ctypes.c_uint8),  # Car race position
-        ('currentLapNum'     , ctypes.c_uint8),  # Current lap number
-        ('pitStatus'         , ctypes.c_uint8),  # 0 = none, 1 = pitting, 2 = in pit area
-        ('sector'            , ctypes.c_uint8),  # 0 = sector1, 1 = sector2, 2 = sector3
-        ('currentLapInvalid' , ctypes.c_uint8),  # Current lap invalid - 0 = valid, 1 = invalid
-        ('penalties'         , ctypes.c_uint8),  # Accumulated time penalties in seconds to be added
-        ('gridPosition'      , ctypes.c_uint8),  # Grid position the vehicle started the race in
-        ('driverStatus'      , ctypes.c_uint8),  # Status of driver - 0 = in garage, 1 = flying lap
-                                                 # 2 = in lap, 3 = out lap, 4 = on track
-        ('resultStatus'      , ctypes.c_uint8)   # Result status - 0 = invalid, 1 = inactive, 2 = active
-                                                 # 3 = finished, 4 = disqualified, 5 = not classified
-                                                 # 6 = retired
+        ('lastLapTime'               , ctypes.c_float),   # Last lap time in seconds
+        ('currentLapTime'            , ctypes.c_float),   # Current time around the lap in seconds
+        ('sector1TimeInMS'           , ctypes.c_uint16),  # Sector 1 time in milliseconds
+        ('sector2TimeInMS'           , ctypes.c_uint16),  # Sector 2 time in milliseconds
+        ('bestLapTime'               , ctypes.c_float),   # Best lap time of the session in seconds
+        ('bestLapNum'                , ctypes.c_uint8),   # Lap number best time achieved on
+        ('bestLapSector1TimeInMS'    , ctypes.c_uint16),  # Sector 1 time of best lap in the session in milliseconds
+        ('bestLapSector2TimeInMS'    , ctypes.c_uint16),  # Sector 2 time of best lap in the session in milliseconds
+        ('bestLapSector3TimeInMS'    , ctypes.c_uint16),  # Sector 3 time of best lap in the session in milliseconds
+        ('bestOverallSector1TimeInMS', ctypes.c_uint16),  # Best overall sector 1 time of the session in milliseconds
+        ('bestOverallSector1LapNum'  , ctypes.c_uint8),   # Lap number best overall sector 1 time achieved on
+        ('bestOverallSector2TimeInMS', ctypes.c_uint16),  # Best overall sector 2 time of the session in milliseconds
+        ('bestOverallSector2LapNum'  , ctypes.c_uint8),   # Lap number best overall sector 2 time achieved on
+        ('bestOverallSector3TimeInMS', ctypes.c_uint16),  # Best overall sector 3 time of the session in milliseconds
+        ('bestOverallSector3LapNum'  , ctypes.c_uint8),   # Lap number best overall sector 3 time achieved on
+        ('lapDistance'               , ctypes.c_float),   # Distance vehicle is around current lap in metres – could
+                                                          # be negative if line hasn't been crossed yet
+        ('totalDistance'             , ctypes.c_float),   # Total distance travelled in session in metres – could
+                                                          # be negative if line hasn't been crossed yet
+        ('safetyCarDelta'            , ctypes.c_float),   # Delta in seconds for safety car
+        ('carPosition'               , ctypes.c_uint8),   # Car race position
+        ('currentLapNum'             , ctypes.c_uint8),   # Current lap number
+        ('pitStatus'                 , ctypes.c_uint8),   # 0 = none, 1 = pitting, 2 = in pit area
+        ('sector'                    , ctypes.c_uint8),   # 0 = sector1, 1 = sector2, 2 = sector3
+        ('currentLapInvalid'         , ctypes.c_uint8),   # Current lap invalid - 0 = valid, 1 = invalid
+        ('penalties'                 , ctypes.c_uint8),   # Accumulated time penalties in seconds to be added
+        ('gridPosition'              , ctypes.c_uint8),   # Grid position the vehicle started the race in
+        ('driverStatus'              , ctypes.c_uint8),   # Status of driver - 0 = in garage, 1 = flying lap
+                                                          # 2 = in lap, 3 = out lap, 4 = on track
+        ('resultStatus'              , ctypes.c_uint8)    # Result status - 0 = invalid, 1 = inactive, 2 = active
+                                                          # 3 = finished, 4 = disqualified, 5 = not classified
+                                                          # 6 = retired
     ]
 
 
@@ -254,12 +280,12 @@ class PacketLapData_V1(PackedLittleEndianStructure):
     """The lap data packet gives details of all the cars in the session.
 
     Frequency: Rate as specified in menus
-    Size: 843 bytes
+    Size: 1190 bytes
     Version: 1
     """
     _fields_ = [
         ('header'  , PacketHeader   ),  # Header
-        ('lapData' , LapData_V1 * 20)   # Lap data for all cars on track
+        ('lapData' , LapData_V1 * 22)   # Lap data for all cars on track
     ]
 
 ########################################################
@@ -268,19 +294,73 @@ class PacketLapData_V1(PackedLittleEndianStructure):
 #                                                      #
 ########################################################
 
+
+class FastestLapData(PackedLittleEndianStructure):
+    _fields_ = [
+        ('vehicleIdx', ctypes.c_uint8),  # Vehicle index of car
+        ('lapTime'   , ctypes.c_float)   # Lap time is in seconds
+    ]
+
+
+class PenaltyData(PackedLittleEndianStructure):
+    _fields_ = [
+        ('penaltyType'     , ctypes.c_uint8),  # Penalty type - see Appendices
+        ('infringementType', ctypes.c_uint8),  # Infringement type - see Appendices
+        ('vehicleIdx'      , ctypes.c_uint8),  # Vehicle index of the car the penalty is applied to
+        ('otherVehicleIdx' , ctypes.c_uint8),  # Vehicle index of the other car involved
+        ('time'            , ctypes.c_uint8),  # Time gained, or time spent doing action in seconds
+        ('lapNum'          , ctypes.c_uint8),  # Lap the penalty occured on
+        ('placesGained'    , ctypes.c_uint8)   # Number of places gained by this
+    ]
+
+
+class RaceWinnerData(PackedLittleEndianStructure):
+    _fields_ = [
+        ('vehicleIdx', ctypes.c_uint8),  # Vehicle index of car
+    ]
+
+
+class RetirementData(PackedLittleEndianStructure):
+    _fields_ = [
+        ('vehicleIdx', ctypes.c_uint8),  # Vehicle index of car
+    ]
+
+
+class SpeedTrapData(PackedLittleEndianStructure):
+    _fields_ = [
+        ('vehicleIdx', ctypes.c_uint8),  # Vehicle index of car
+        ('speed'     , ctypes.c_float)   # Top speed achieved in kilometres per hour
+    ]
+
+
+class TeamMateInPitsData(PackedLittleEndianStructure):
+    _fields_ = [
+        ('vehicleIdx', ctypes.c_uint8),  # Vehicle index of car
+    ]
+
+
+class EventDataDetails(ctypes.Union):
+    _fields_ = [
+        ('fastestLap', FastestLapData),
+        ('penalty', PenaltyData),
+        ('raceWinner', RaceWinnerData),
+        ('retirement', RetirementData),
+        ('speedTrap', SpeedTrapData),
+        ('teamMateInPits', TeamMateInPitsData)
+    ]
+
+
 class PacketEventData_V1(PackedLittleEndianStructure):
     """This packet gives details of events that happen during the course of a session.
 
     Frequency: When the event occurs
-    Size: 32 bytes
+    Size: 35 bytes
     Version: 1
     """
     _fields_ = [
-        ('header'          , PacketHeader     ),  # Header
-        ('eventStringCode' , ctypes.c_char * 4),  # Event string code, see below
-        # Event details - should be interpreted differently for each type
-        ('vehicleIdx'      , ctypes.c_uint8   ),  # Vehicle index of car (valid for events: FTLP, RTMT, TMPT, RCWN)
-        ('lapTime'         , ctypes.c_float   )   # Lap time is in seconds (valid for events: FTLP)
+        ('header'         , PacketHeader     ),  # Header
+        ('eventStringCode', ctypes.c_char * 4),  # Event string code, see below
+        ('eventDetails'   , EventDataDetails )   # Event details - should be interpreted differently for each type
     ]
 
 
@@ -296,6 +376,8 @@ class EventStringCode(enum.Enum):
     TMPT = b'TMPT'
     CHQF = b'CHQF'
     RCWN = b'RCWN'
+    PENA = b'PENA'
+    SPTP = b'SPTP'
 
 
 EventStringCode.short_description = {
@@ -307,7 +389,9 @@ EventStringCode.short_description = {
     EventStringCode.DRSD : 'DRS disabled',
     EventStringCode.TMPT : 'Team mate in pits',
     EventStringCode.CHQF : 'Chequered flag',
-    EventStringCode.RCWN : 'Race Winner'
+    EventStringCode.RCWN : 'Race Winner',
+    EventStringCode.PENA : 'Penalty issued',
+    EventStringCode.SPTP : 'Speed trap triggered'
 }
 
 
@@ -320,7 +404,9 @@ EventStringCode.long_description = {
     EventStringCode.DRSD : 'Race control have disabled DRS',
     EventStringCode.TMPT : 'Your team mate has entered the pits',
     EventStringCode.CHQF : 'The chequered flag has been waved',
-    EventStringCode.RCWN : 'The race winner is announced'
+    EventStringCode.RCWN : 'The race winner is announced',
+    EventStringCode.PENA : 'A penalty has been issued',
+    EventStringCode.SPTP : 'Speed trap has been triggered'
 }
 
 ###############################################################
@@ -330,7 +416,7 @@ EventStringCode.long_description = {
 ###############################################################
 
 class ParticipantData_V1(PackedLittleEndianStructure):
-    """This type is used for the 20-element 'participants' array of the PacketParticipantsData_V1 type, defined below."""
+    """This type is used for the 22-element 'participants' array of the PacketParticipantsData_V1 type, defined below."""
     _fields_ = [
         ('aiControlled' , ctypes.c_uint8    ),  # Whether the vehicle is AI (1) or Human (0) controlled
         ('driverId'     , ctypes.c_uint8    ),  # Driver id - see appendix
@@ -352,14 +438,14 @@ class PacketParticipantsData_V1(PackedLittleEndianStructure):
     otherwise it will be the driver name.
 
     Frequency: Every 5 seconds
-    Size: 1104 bytes
+    Size: 1213 bytes
     Version: 1
     """
     _fields_ = [
         ('header'        , PacketHeader           ),  # Header
         ('numActiveCars' , ctypes.c_uint8         ),  # Number of active cars in the data – should match number of
                                                       # cars on HUD
-        ('participants'  , ParticipantData_V1 * 20)
+        ('participants'  , ParticipantData_V1 * 22)
     ]
 
 #############################################################
@@ -369,7 +455,7 @@ class PacketParticipantsData_V1(PackedLittleEndianStructure):
 #############################################################
 
 class CarSetupData_V1(PackedLittleEndianStructure):
-    """This type is used for the 20-element 'carSetups' array of the PacketCarSetupData_V1 type, defined below."""
+    """This type is used for the 22-element 'carSetups' array of the PacketCarSetupData_V1 type, defined below."""
     _fields_ = [
         ('frontWing'             , ctypes.c_uint8),  # Front wing aero
         ('rearWing'              , ctypes.c_uint8),  # Rear wing aero
@@ -387,8 +473,10 @@ class CarSetupData_V1(PackedLittleEndianStructure):
         ('rearSuspensionHeight'  , ctypes.c_uint8),  # Rear ride height
         ('brakePressure'         , ctypes.c_uint8),  # Brake pressure (percentage)
         ('brakeBias'             , ctypes.c_uint8),  # Brake bias (percentage)
-        ('frontTyrePressure'     , ctypes.c_float),  # Front tyre pressure (PSI)
-        ('rearTyrePressure'      , ctypes.c_float),  # Rear tyre pressure (PSI)
+        ('rearLeftTyrePressure'  , ctypes.c_float),  # Rear left tyre pressure (PSI)
+        ('rearRightTyrePressure' , ctypes.c_float),  # Rear right tyre pressure (PSI)
+        ('frontLeftTyrePressure' , ctypes.c_float),  # Front left tyre pressure (PSI)
+        ('frontRightTyrePressure', ctypes.c_float),  # Front right tyre pressure (PSI)
         ('ballast'               , ctypes.c_uint8),  # Ballast
         ('fuelLoad'              , ctypes.c_float)   # Fuel load
     ]
@@ -400,12 +488,12 @@ class PacketCarSetupData_V1(PackedLittleEndianStructure):
     Note that in multiplayer games, other player cars will appear as blank, you will only be able to see your car setup and AI cars.
 
     Frequency: 2 per second
-    Size: 843 bytes
+    Size: 1102 bytes
     Version: 1
     """
     _fields_ = [
         ('header'    , PacketHeader        ),  # Header
-        ('carSetups' , CarSetupData_V1 * 20)
+        ('carSetups' , CarSetupData_V1 * 22)
     ]
 
 ################################################################
@@ -415,7 +503,7 @@ class PacketCarSetupData_V1(PackedLittleEndianStructure):
 ################################################################
 
 class CarTelemetryData_V1(PackedLittleEndianStructure):
-    """This type is used for the 20-element 'carTelemetryData' array of the PacketCarTelemetryData_V1 type, defined below."""
+    """This type is used for the 22-element 'carTelemetryData' array of the PacketCarTelemetryData_V1 type, defined below."""
     _fields_ = [
         ('speed'                   , ctypes.c_uint16    ),  # Speed of car in kilometres per hour
         ('throttle'                , ctypes.c_float     ),  # Amount of throttle applied (0.0 to 1.0)
@@ -427,8 +515,8 @@ class CarTelemetryData_V1(PackedLittleEndianStructure):
         ('drs'                     , ctypes.c_uint8     ),  # 0 = off, 1 = on
         ('revLightsPercent'        , ctypes.c_uint8     ),  # Rev lights indicator (percentage)
         ('brakesTemperature'       , ctypes.c_uint16 * 4),  # Brakes temperature (celsius)
-        ('tyresSurfaceTemperature' , ctypes.c_uint16 * 4),  # Tyres surface temperature (celsius)
-        ('tyresInnerTemperature'   , ctypes.c_uint16 * 4),  # Tyres inner temperature (celsius)
+        ('tyresSurfaceTemperature' , ctypes.c_uint8  * 4),  # Tyres surface temperature (celsius)
+        ('tyresInnerTemperature'   , ctypes.c_uint8  * 4),  # Tyres inner temperature (celsius)
         ('engineTemperature'       , ctypes.c_uint16    ),  # Engine temperature (celsius)
         ('tyresPressure'           , ctypes.c_float  * 4),  # Tyres pressure (PSI)
         ('surfaceType'             , ctypes.c_uint8  * 4)   # Driving surface, see appendices
@@ -441,14 +529,21 @@ class PacketCarTelemetryData_V1(PackedLittleEndianStructure):
     It details various values that would be recorded on the car such as speed, throttle application, DRS etc.
 
     Frequency: Rate as specified in menus
-    Size: 1347 bytes
+    Size: 1307 bytes
     Version: 1
     """
     _fields_ = [
-        ('header'           , PacketHeader            ),  # Header
-        ('carTelemetryData' , CarTelemetryData_V1 * 20),
-        ('buttonStatus'     , ctypes.c_uint32         )   # Bit flags specifying which buttons are being
-                                                          # pressed currently - see appendices
+        ('header'                      , PacketHeader),   # Header
+        ('carTelemetryData'            , CarTelemetryData_V1 * 22),
+        ('buttonStatus'                , ctypes.c_uint32),  # Bit flags specifying which buttons are being
+                                                            # pressed currently - see appendices
+        ('mfdPanelIndex'               , ctypes.c_uint8),   # Index of MFD panel open - 255 = MFD closed
+                                                            # Single player, race - 0 = Car setup, 1 = Pits
+                                                            # 2 = Damage, 3 =  Engine, 4 = Temperatures
+                                                            # May vary depending on game mode
+        ('mfdPanelIndexSecondaryPlayer', ctypes.c_uint8),   # See above
+        ('suggestedGear'               , ctypes.c_int8)     # Suggested gear for the player (1-8)
+                                                            # 0 if no gear suggested
     ]
 
 #############################################################
@@ -458,7 +553,7 @@ class PacketCarTelemetryData_V1(PackedLittleEndianStructure):
 #############################################################
 
 class CarStatusData_V1(PackedLittleEndianStructure):
-    """This type is used for the 20-element 'carStatusData' array of the PacketCarStatusData_V1 type, defined below.
+    """This type is used for the 22-element 'carStatusData' array of the PacketCarStatusData_V1 type, defined below.
 
     There is some data in the Car Status packets that you may not want other players seeing if you are in a multiplayer game.
     This is controlled by the "Your Telemetry" setting in the Telemetry options. The options are:
@@ -487,6 +582,7 @@ class CarStatusData_V1(PackedLittleEndianStructure):
         ersDeployedThisLap
         ersHarvestedThisLapMGUK
         ersHarvestedThisLapMGUH
+        tyresAgeLaps
     """
     _fields_ = [
         ('tractionControl'         , ctypes.c_uint8    ),  # 0 (off) - 2 (high)
@@ -501,6 +597,8 @@ class CarStatusData_V1(PackedLittleEndianStructure):
         ('idleRPM'                 , ctypes.c_uint16   ),  # Cars idle RPM
         ('maxGears'                , ctypes.c_uint8    ),  # Maximum number of gears
         ('drsAllowed'              , ctypes.c_uint8    ),  # 0 = not allowed, 1 = allowed, -1 = unknown
+        ('drsActivationDistance'   , ctypes.c_uint16   ),  # 0 = DRS not available, non-zero - DRS will be available
+                                                           # in [X] metres
         ('tyresWear'               , ctypes.c_uint8 * 4),  # Tyre wear percentage
         ('actualTyreCompound'      , ctypes.c_uint8    ),  # F1 Modern - 16 = C5, 17 = C4, 18 = C3, 19 = C2, 20 = C1
                                                            # 7 = inter, 8 = wet
@@ -514,10 +612,12 @@ class CarStatusData_V1(PackedLittleEndianStructure):
                                                            # F1 Classic – same as above
                                                            # F2 2018 – same as above
                                                            # F2 2019 – 19 = super soft, 21 = medium, 15 = wet
+        ('typesAgeLaps'            , ctypes.c_uint8    ),  # Age in laps of the current set of tyres
         ('tyresDamage'             , ctypes.c_uint8 * 4),  # Tyre damage (percentage)
         ('frontLeftWingDamage'     , ctypes.c_uint8    ),  # Front left wing damage (percentage)
         ('frontRightWingDamage'    , ctypes.c_uint8    ),  # Front right wing damage (percentage)
         ('rearWingDamage'          , ctypes.c_uint8    ),  # Rear wing damage (percentage)
+        ('drsFault'                , ctypes.c_uint8    ),  # Indicator for DRS fault, 0 = OK, 1 = fault
         ('engineDamage'            , ctypes.c_uint8    ),  # Engine damage (percentage)
         ('gearBoxDamage'           , ctypes.c_uint8    ),  # Gear box damage (percentage)
         ('vehicleFiaFlags'         , ctypes.c_int8     ),  # -1 = invalid/unknown, 0 = none, 1 = green
@@ -537,12 +637,12 @@ class PacketCarStatusData_V1(PackedLittleEndianStructure):
     It includes values such as the damage readings on the car.
 
     Frequency: Rate as specified in menus
-    Size: 1143 bytes
+    Size: 1344 bytes
     Version: 1
     """
     _fields_ = [
         ('header'        , PacketHeader         ),  # Header
-        ('carStatusData' , CarStatusData_V1 * 20)
+        ('carStatusData' , CarStatusData_V1 * 22)
     ]
 
 ###################################################################
@@ -1016,11 +1116,11 @@ if __name__ == "__main__":
 
     # Check all the packet sizes.
 
-    assert ctypes.sizeof(PacketMotionData_V1)       == 1343
-    assert ctypes.sizeof(PacketSessionData_V1)      ==  149
-    assert ctypes.sizeof(PacketLapData_V1)          ==  843
-    assert ctypes.sizeof(PacketEventData_V1)        ==   32
-    assert ctypes.sizeof(PacketParticipantsData_V1) == 1104
-    assert ctypes.sizeof(PacketCarSetupData_V1)     ==  843
-    assert ctypes.sizeof(PacketCarTelemetryData_V1) == 1347
-    assert ctypes.sizeof(PacketCarStatusData_V1)    == 1143
+    assert ctypes.sizeof(PacketMotionData_V1)       == 1464
+    assert ctypes.sizeof(PacketSessionData_V1)      ==  251
+    assert ctypes.sizeof(PacketLapData_V1)          == 1190
+    assert ctypes.sizeof(PacketEventData_V1)        ==   35
+    assert ctypes.sizeof(PacketParticipantsData_V1) == 1213
+    assert ctypes.sizeof(PacketCarSetupData_V1)     == 1102
+    assert ctypes.sizeof(PacketCarTelemetryData_V1) == 1307
+    assert ctypes.sizeof(PacketCarStatusData_V1)    == 1344
