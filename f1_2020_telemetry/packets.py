@@ -720,7 +720,9 @@ TrackIDs = {
     21 : 'Sakhir Short',
     22 : 'Silverstone Short',
     23 : 'Texas Short',
-    24 : 'Suzuka Short'
+    24 : 'Suzuka Short',
+    25 : 'Hanoi',
+    26 : 'Zandvoort'
 }
 
 
