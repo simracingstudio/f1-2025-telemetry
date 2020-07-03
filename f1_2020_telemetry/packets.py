@@ -781,7 +781,9 @@ NationalityIDs = {
     83 : 'Uruguayan',
     84 : 'Ukrainian',
     85 : 'Venezuelan',
-    86 : 'Welsh'
+    86 : 'Welsh',
+    87 : 'Barbadian',
+    88 : 'Vietnamese'
 }
 
 
