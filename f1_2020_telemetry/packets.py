@@ -53,15 +53,16 @@ class PackedLittleEndianStructure(ctypes.LittleEndianStructure):
 class PacketHeader(PackedLittleEndianStructure):
     """The header for each of the UDP telemetry packets."""
     _fields_ = [
-        ('packetFormat'     , ctypes.c_uint16),  # 2019
-        ('gameMajorVersion' , ctypes.c_uint8 ),  # Game major version - "X.00"
-        ('gameMinorVersion' , ctypes.c_uint8 ),  # Game minor version - "1.XX"
-        ('packetVersion'    , ctypes.c_uint8 ),  # Version of this packet type, all start from 1
-        ('packetId'         , ctypes.c_uint8 ),  # Identifier for the packet type, see below
-        ('sessionUID'       , ctypes.c_uint64),  # Unique identifier for the session
-        ('sessionTime'      , ctypes.c_float ),  # Session timestamp
-        ('frameIdentifier'  , ctypes.c_uint32),  # Identifier for the frame the data was retrieved on
-        ('playerCarIndex'   , ctypes.c_uint8 )   # Index of player's car in the array
+        ('packetFormat'           , ctypes.c_uint16),  # 2020
+        ('gameMajorVersion'       , ctypes.c_uint8 ),  # Game major version - "X.00"
+        ('gameMinorVersion'       , ctypes.c_uint8 ),  # Game minor version - "1.XX"
+        ('packetVersion'          , ctypes.c_uint8 ),  # Version of this packet type, all start from 1
+        ('packetId'               , ctypes.c_uint8 ),  # Identifier for the packet type, see below
+        ('sessionUID'             , ctypes.c_uint64),  # Unique identifier for the session
+        ('sessionTime'            , ctypes.c_float ),  # Session timestamp
+        ('frameIdentifier'        , ctypes.c_uint32),  # Identifier for the frame the data was retrieved on
+        ('playerCarIndex'         , ctypes.c_uint8 ),  # Index of player's car in the array
+        ('secondaryPlayerCarIndex', ctypes.c_uint8 )   # Index of secondary player's car in the array (splitscreen)
     ]
 
 
@@ -957,14 +958,14 @@ ButtonFlag.description = {
 
 # Map from (packetFormat, packetVersion, packetId) to a specific packet type.
 HeaderFieldsToPacketType = {
-    (2019, 1, 0) : PacketMotionData_V1,
-    (2019, 1, 1) : PacketSessionData_V1,
-    (2019, 1, 2) : PacketLapData_V1,
-    (2019, 1, 3) : PacketEventData_V1,
-    (2019, 1, 4) : PacketParticipantsData_V1,
-    (2019, 1, 5) : PacketCarSetupData_V1,
-    (2019, 1, 6) : PacketCarTelemetryData_V1,
-    (2019, 1, 7) : PacketCarStatusData_V1
+    (2020, 1, 0) : PacketMotionData_V1,
+    (2020, 1, 1) : PacketSessionData_V1,
+    (2020, 1, 2) : PacketLapData_V1,
+    (2020, 1, 3) : PacketEventData_V1,
+    (2020, 1, 4) : PacketParticipantsData_V1,
+    (2020, 1, 5) : PacketCarSetupData_V1,
+    (2020, 1, 6) : PacketCarTelemetryData_V1,
+    (2020, 1, 7) : PacketCarStatusData_V1
 }
 
 class UnpackError(Exception):
