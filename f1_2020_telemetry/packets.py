@@ -70,37 +70,43 @@ class PacketHeader(PackedLittleEndianStructure):
 class PacketID(enum.IntEnum):
     """Value as specified in the PacketHeader.packetId header field, used to distinguish packet types."""
 
-    MOTION        = 0
-    SESSION       = 1
-    LAP_DATA      = 2
-    EVENT         = 3
-    PARTICIPANTS  = 4  # 0.2 Hz (once every five seconds)
-    CAR_SETUPS    = 5
-    CAR_TELEMETRY = 6
-    CAR_STATUS    = 7
+    MOTION               = 0
+    SESSION              = 1
+    LAP_DATA             = 2
+    EVENT                = 3
+    PARTICIPANTS         = 4  # 0.2 Hz (once every five seconds)
+    CAR_SETUPS           = 5
+    CAR_TELEMETRY        = 6
+    CAR_STATUS           = 7
+    FINAL_CLASSIFICATION = 8
+    LOBBY_INFO           = 9
 
 
 PacketID.short_description = {
-    PacketID.MOTION        : 'Motion',
-    PacketID.SESSION       : 'Session',
-    PacketID.LAP_DATA      : 'Lap Data',
-    PacketID.EVENT         : 'Event',
-    PacketID.PARTICIPANTS  : 'Participants',
-    PacketID.CAR_SETUPS    : 'Car Setups',
-    PacketID.CAR_TELEMETRY : 'Car Telemetry',
-    PacketID.CAR_STATUS    : 'Car Status'
+    PacketID.MOTION               : 'Motion',
+    PacketID.SESSION              : 'Session',
+    PacketID.LAP_DATA             : 'Lap Data',
+    PacketID.EVENT                : 'Event',
+    PacketID.PARTICIPANTS         : 'Participants',
+    PacketID.CAR_SETUPS           : 'Car Setups',
+    PacketID.CAR_TELEMETRY        : 'Car Telemetry',
+    PacketID.CAR_STATUS           : 'Car Status',
+    PacketID.FINAL_CLASSIFICATION : 'Final Classification',
+    PacketID.LOBBY_INFO           : 'Lobby information'
 }
 
 
 PacketID.long_description = {
-    PacketID.MOTION        : 'Contains all motion data for player\'s car – only sent while player is in control',
-    PacketID.SESSION       : 'Data about the session – track, time left',
-    PacketID.LAP_DATA      : 'Data about all the lap times of cars in the session',
-    PacketID.EVENT         : 'Various notable events that happen during a session',
-    PacketID.PARTICIPANTS  : 'List of participants in the session, mostly relevant for multiplayer',
-    PacketID.CAR_SETUPS    : 'Packet detailing car setups for cars in the race',
-    PacketID.CAR_TELEMETRY : 'Telemetry data for all cars',
-    PacketID.CAR_STATUS    : 'Status data for all cars such as damage'
+    PacketID.MOTION               : 'Contains all motion data for player\'s car – only sent while player is in control',
+    PacketID.SESSION              : 'Data about the session – track, time left',
+    PacketID.LAP_DATA             : 'Data about all the lap times of cars in the session',
+    PacketID.EVENT                : 'Various notable events that happen during a session',
+    PacketID.PARTICIPANTS         : 'List of participants in the session, mostly relevant for multiplayer',
+    PacketID.CAR_SETUPS           : 'Packet detailing car setups for cars in the race',
+    PacketID.CAR_TELEMETRY        : 'Telemetry data for all cars',
+    PacketID.CAR_STATUS           : 'Status data for all cars such as damage',
+    PacketID.FINAL_CLASSIFICATION : 'Final classification confirmation at the end of a race',
+    PacketID.LOBBY_INFO           : 'Information about players in a multiplayer lobby'
 }
 
 #########################################################
@@ -645,6 +651,82 @@ class PacketCarStatusData_V1(PackedLittleEndianStructure):
         ('carStatusData' , CarStatusData_V1 * 22)
     ]
 
+#############################################################
+#                                                           #
+#  ______  Packet ID 8 : FINAL CLASSIFICATION PACKET _____  #
+#                                                           #
+#############################################################
+
+class FinalClassificationData_V1(PackedLittleEndianStructure):
+    """
+    This type is used for the 22-element 'classificationData' array of the PacketFinalClassificationData_V1 type, defined below.
+    """
+    _fields_ = [
+        ('position'        , ctypes.c_uint8    ),  # Finishing position
+        ('numLaps'         , ctypes.c_uint8    ),  # Number of laps completed
+        ('gridPosition'    , ctypes.c_uint8    ),  # Grid position of the car
+        ('points'          , ctypes.c_uint8    ),  # Number of points scored
+        ('numPitStops'     , ctypes.c_uint8    ),  # Number of pit stops made
+        ('resultStatus'    , ctypes.c_uint8    ),  # Result status - 0 = invalid, 1 = inactive, 2 = active
+                                                   # 3 = finished, 4 = disqualified, 5 = not classified
+                                                   # 6 = retired
+        ('bestLapTime'     , ctypes.c_float    ),  # Best lap time of the session in seconds
+        ('totalRaceTime'   , ctypes.c_double   ),  # Total race time in seconds without penalties
+        ('penaltiesTime'   , ctypes.c_uint8    ),  # Total penalties accumulated in seconds
+        ('numPenalties'    , ctypes.c_uint8    ),  # Number of penalties applied to this driver
+        ('numTyreStints'   , ctypes.c_uint8    ),  # Number of tyres stints up to maximum
+        ('tyreStintsActual', ctypes.c_uint8 * 8),  # Actual tyres used by this driver
+        ('tyreStintsVisual', ctypes.c_uint8 * 8)   # Visual tyres used by this driver
+    ]
+
+
+class PacketFinalClassificationData_V1(PackedLittleEndianStructure):
+    """This packet details the final classification at the end of the race.
+
+    This data will match with the post race results screen.
+
+    Frequency: Once at the end of the race
+    Size: 839 bytes
+    Version: 1
+    """
+    _fields_ = [
+        ('header'            , PacketHeader),    # Header
+        ('numCars'           , ctypes.c_uint8),  # Number of cars in the final classification
+        ('classificationData', FinalClassificationData_V1 * 22)
+    ]
+
+###############################################################
+#                                                             #
+#  ___________  Packet ID 9 : LOBBY INFO PACKET  ___________  #
+#                                                             #
+###############################################################
+
+class LobbyInfoData_V1(PackedLittleEndianStructure):
+    """This type is used for the 22-element 'lobbyPlayers' array of the PacketLobbyInfoData_V1 type, defined below."""
+    _fields_ = [
+        ('aiControlled' , ctypes.c_uint8    ),  # Whether the vehicle is AI (1) or Human (0) controlled
+        ('teamId'       , ctypes.c_uint8    ),  # Team id - see appendix (255 if no team currently selected)
+        ('nationality'  , ctypes.c_uint8    ),  # Nationality of the driver
+        ('name'         , ctypes.c_char * 48),  # Name of participant in UTF-8 format - null terminated
+                                                # Will be truncated with … (U+2026) if too long
+        ('readyStatus'  , ctypes.c_uint8    )   # 0 = not ready, 1 = ready, 2 = spectating
+    ]
+
+
+class PacketLobbyInfoData_V1(PackedLittleEndianStructure):
+    """This is a list of players in a multiplayer lobby.
+
+    Frequency: Two every second when in the lobby
+    Size: 1169 bytes
+    Version: 1
+    """
+    _fields_ = [
+        ('header'      , PacketHeader         ),  # Header
+        ('numPlayers'  , ctypes.c_uint8       ),  # Number of players in the lobby data
+        ('lobbyPlayers', LobbyInfoData_V1 * 22)
+    ]
+
+
 ###################################################################
 #                                                                 #
 #  Appendices: various value enumerations used in the UDP output  #
@@ -1065,7 +1147,9 @@ HeaderFieldsToPacketType = {
     (2020, 1, 4) : PacketParticipantsData_V1,
     (2020, 1, 5) : PacketCarSetupData_V1,
     (2020, 1, 6) : PacketCarTelemetryData_V1,
-    (2020, 1, 7) : PacketCarStatusData_V1
+    (2020, 1, 7) : PacketCarStatusData_V1,
+    (2020, 1, 8) : PacketFinalClassificationData_V1,
+    (2020, 1, 9) : PacketLobbyInfoData_V1
 }
 
 class UnpackError(Exception):
@@ -1116,11 +1200,13 @@ if __name__ == "__main__":
 
     # Check all the packet sizes.
 
-    assert ctypes.sizeof(PacketMotionData_V1)       == 1464
-    assert ctypes.sizeof(PacketSessionData_V1)      ==  251
-    assert ctypes.sizeof(PacketLapData_V1)          == 1190
-    assert ctypes.sizeof(PacketEventData_V1)        ==   35
-    assert ctypes.sizeof(PacketParticipantsData_V1) == 1213
-    assert ctypes.sizeof(PacketCarSetupData_V1)     == 1102
-    assert ctypes.sizeof(PacketCarTelemetryData_V1) == 1307
-    assert ctypes.sizeof(PacketCarStatusData_V1)    == 1344
+    assert ctypes.sizeof(PacketMotionData_V1)              == 1464
+    assert ctypes.sizeof(PacketSessionData_V1)             ==  251
+    assert ctypes.sizeof(PacketLapData_V1)                 == 1190
+    assert ctypes.sizeof(PacketEventData_V1)               ==   35
+    assert ctypes.sizeof(PacketParticipantsData_V1)        == 1213
+    assert ctypes.sizeof(PacketCarSetupData_V1)            == 1102
+    assert ctypes.sizeof(PacketCarTelemetryData_V1)        == 1307
+    assert ctypes.sizeof(PacketCarStatusData_V1)           == 1344
+    assert ctypes.sizeof(PacketFinalClassificationData_V1) ==  839
+    assert ctypes.sizeof(PacketLobbyInfoData_V1)           == 1169
