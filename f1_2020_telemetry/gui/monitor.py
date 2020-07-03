@@ -9,7 +9,7 @@ from PyQt5.QtCore import QObject, pyqtSignal, QAbstractListModel, QVariant, Qt
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QHBoxLayout, QLabel, QListView
 from PyQt5.QtNetwork import QAbstractSocket, QUdpSocket
 
-from f1_2019_telemetry.packets import PacketID, unpack_udp_packet, UnpackError
+from f1_2020_telemetry.packets import PacketID, unpack_udp_packet, UnpackError
 
 IncomingPacket = namedtuple("IncomingPacket", "timestamp, recv_port, src_address, src_port, packet")
 

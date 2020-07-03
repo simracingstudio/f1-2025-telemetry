@@ -1,15 +1,15 @@
 #! /usr/bin/env python3
 
-"""This script dumps the F1 2019 telemetry tables in ReST or MarkDown format."""
+"""This script dumps the F1 2020 telemetry tables in ReST or MarkDown format."""
 
 import os
 import sys
 import argparse
 
-# Make sure we import from the f1_2019_telemetry package inside the repository.
+# Make sure we import from the f1_2020_telemetry package inside the repository.
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(sys.argv[0]), '..')))
 
-from f1_2019_telemetry.packets import PacketID, TeamIDs, DriverIDs, TrackIDs, NationalityIDs, SurfaceTypes, ButtonFlag, EventStringCode
+from f1_2020_telemetry.packets import PacketID, TeamIDs, DriverIDs, TrackIDs, NationalityIDs, SurfaceTypes, ButtonFlag, EventStringCode
 
 def dump_table_rst(items, labels, num_rows=None, num_cols=None):
     """Dump a number of items as an ReST markup table.
@@ -172,11 +172,11 @@ def dump_tables(dump_table_func):
 
 
 def main():
-    """Dump F1 2019 tables in ReST or MarkDown format."""
+    """Dump F1 2020 tables in ReST or MarkDown format."""
 
     argparser = argparse.ArgumentParser
 
-    parser = argparse.ArgumentParser(description='Dump F1 2019 tables in format suitable for documentation.')
+    parser = argparse.ArgumentParser(description='Dump F1 2020 tables in format suitable for documentation.')
     parser.add_argument('-f', '--format', default='rst', choices=['rst', 'markdown'],
                         help='Format of tables to be dumped (default: rst).')
 

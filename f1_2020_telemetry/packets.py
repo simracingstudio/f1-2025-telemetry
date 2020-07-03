@@ -1,8 +1,8 @@
-"""F1 2019 UDP Telemetry support package
+"""F1 2020 UDP Telemetry support package
 
-This package is based on the CodeMasters Forum post documenting the F1 2019 packet format:
+This package is based on the CodeMasters Forum post documenting the F1 2020 packet format:
 
-    https://forums.codemasters.com/topic/38920-f1-2019-udp-specification/
+    https://forums.codemasters.com/topic/54423-f1%C2%AE-2020-udp-specification/
 
 Compared to the definitions given there, the Python version has the following changes:
 

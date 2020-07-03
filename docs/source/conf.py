@@ -16,12 +16,12 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'f1-2019-telemetry'
-copyright = '2019, Sidney Cadot'
-author = 'Sidney Cadot'
+project = 'f1-2020-telemetry'
+copyright = '2020, Guillaume Parent'
+author = 'Guillaume Parent'
 
 # The full version, including alpha/beta/rc tags
-release = '1.1.4'
+release = '0.1.0'
 
 # -- General configuration ---------------------------------------------------
 

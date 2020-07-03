@@ -1,14 +1,14 @@
 .. _telemetry-specification:
 
 ======================================
-F1 2019 Telemetry Packet Specification
+F1 2020 Telemetry Packet Specification
 ======================================
 
 .. note::
 
-   This specification was copied (with the minor changes listed below) from the CodeMasters forum topic describing the F1 2019 telemetry UDP packet specification, as found here:
+   This specification was copied (with the minor changes listed below) from the CodeMasters forum topic describing the F1 2020 telemetry UDP packet specification, as found here:
 
-     https://forums.codemasters.com/topic/38920-f1-2019-udp-specification/
+     https://forums.codemasters.com/topic/54423-f1%C2%AE-2020-udp-specification/
 
    The forum post has one post detailing packet formats, followed by a post with Frequently Asked Questions, followed by a post with appendices, giving a number of lookup tables.
    The package format and appendices have been reproduced here; for the FAQ, please refer to the original forum topic.

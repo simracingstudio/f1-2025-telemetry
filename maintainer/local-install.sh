@@ -7,6 +7,6 @@ if [ -n $LOCAL_PYTHON3_BIN ] ; then
 fi
 
 
-pip3 uninstall -y f1-2019-telemetry
+pip3 uninstall -y f1-2020-telemetry
 
 pip3 install dist/*.whl
