@@ -1,6 +1,8 @@
 __pycache__
+.idea/
 docs/build
 docs/source/generated
 dist
+venv/
 *.sqlite3
 *.pyc
