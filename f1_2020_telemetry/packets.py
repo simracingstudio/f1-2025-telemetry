@@ -591,9 +591,25 @@ TeamIDs = {
     38 : 'Williams 2003',
     39 : 'Brawn 2009',
     40 : 'Lotus 1978',
+    41 : 'F1 Generic car',
+    42 : 'Art GP \'19',
+    43 : 'Campos \'19',
+    44 : 'Carlin \'19',
+    45 : 'Sauber Junior Charouz \'19',
+    46 : 'Dams \'19',
+    47 : 'Uni-Virtuosi \'19',
+    48 : 'MP Motorsport \'19',
+    49 : 'Prema \'19',
+    50 : 'Trident \'19',
+    51 : 'Arden \'19',
+    53 : 'Benetton 1994',
+    54 : 'Benetton 1995',
+    55 : 'Ferrari 2000',
+    56 : 'Jordan 1991',
     63 : 'Ferrari 1990',
     64 : 'McLaren 2010',
-    65 : 'Ferrari 2010'
+    65 : 'Ferrari 2010',
+   255 : 'My Team'
 }
 
 
@@ -610,6 +626,7 @@ DriverIDs = {
     13 : 'Sebastian Vettel',
     14 : 'Sergio Perez',
     15 : 'Valtteri Bottas',
+    17 : 'Esteban Ocon',
     19 : 'Lance Stroll',
     20 : 'Arron Barnes',
     21 : 'Martin Giles',
@@ -662,7 +679,19 @@ DriverIDs = {
     70 : 'Rashid Nair',
     71 : 'Jack Tremblay',
     74 : 'Antonio Giovinazzi',
-    75 : 'Robert Kubica'
+    75 : 'Robert Kubica',
+    78 : 'Nobuharu Matsushita',
+    79 : 'Nikita Mazepin',
+    80 : 'Guanyu Zhou',
+    81 : 'Mick Schumacher',
+    82 : 'Callum Ilott',
+    83 : 'Juan Manuel Correa',
+    84 : 'Jordan King',
+    85 : 'Mahaveer Raghunathan',
+    86 : 'Tatiana Calderón',
+    87 : 'Anthoine Hubert',
+    88 : 'Giuliano Alesi',
+    89 : 'Ralph Boschung'
 }
 
 
