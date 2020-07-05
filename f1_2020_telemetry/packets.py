@@ -504,12 +504,15 @@ class CarStatusData_V1(PackedLittleEndianStructure):
         ('actualTyreCompound'      , ctypes.c_uint8    ),  # F1 Modern - 16 = C5, 17 = C4, 18 = C3, 19 = C2, 20 = C1
                                                            # 7 = inter, 8 = wet
                                                            # F1 Classic - 9 = dry, 10 = wet
-                                                           # F2 – 11 = super soft, 12 = soft, 13 = medium, 14 = hard
+                                                           # F2 2018 – 11 = super soft, 12 = soft, 13 = medium, 14 = hard
                                                            # 15 = wet
-        ('tyreVisualCompound'      , ctypes.c_uint8    ),  # F1 visual (can be different from actual compound)
+                                                           # F2 2019 - 21 = super soft, 23 = medium
+                                                           # 25 = wet
+        ('visualTyreCompound'      , ctypes.c_uint8    ),  # F1 visual (can be different from actual compound)
                                                            # 16 = soft, 17 = medium, 18 = hard, 7 = inter, 8 = wet
                                                            # F1 Classic – same as above
-                                                           # F2 – same as above
+                                                           # F2 2018 – same as above
+                                                           # F2 2019 – 19 = super soft, 21 = medium, 15 = wet
         ('tyresDamage'             , ctypes.c_uint8 * 4),  # Tyre damage (percentage)
         ('frontLeftWingDamage'     , ctypes.c_uint8    ),  # Front left wing damage (percentage)
         ('frontRightWingDamage'    , ctypes.c_uint8    ),  # Front right wing damage (percentage)
