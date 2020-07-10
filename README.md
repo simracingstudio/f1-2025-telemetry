@@ -10,7 +10,7 @@ For F1 2020, the packet format is described here: https://forums.codemasters.com
 
 The package should work on Python 3.6 and above.
 
-This project is a fork of f1-2019-telemetry by Sidney Cabot (reddish) for F1 2019
+This project is a fork of f1-2019-telemetry by Sidney Cadot (reddish) for F1 2019
 
 
 Project information
