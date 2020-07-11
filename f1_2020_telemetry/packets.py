@@ -740,7 +740,7 @@ TeamIDs = {
      3 : 'Williams',
      4 : 'Racing Point',
      5 : 'Renault',
-     6 : 'Toro Rosso',
+     6 : 'AlphaTauri',
      7 : 'Haas',
      8 : 'McLaren',
      9 : 'Alfa Romeo',
