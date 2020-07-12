@@ -10,7 +10,7 @@ It also provides :ref:`command line tools <command_line_tools>` to record, playb
 With each yearly release of the F1 series game, CodeMasters post a descripton of the corresponding telemetry packet format on their forum.
 For F1 2020, the packet format is described here:
 
-  https://forums.codemasters.com/topic/54423-f1%C2%AE-2020-udp-specification/
+  https://forums.codemasters.com/topic/50942-f1-2020-udp-specification/
 
 A formatted version of this specification, with some small issues fixed, is included in the *f1-2020-telemetry* package and can be found :ref:`here <telemetry-specification>`.
 
