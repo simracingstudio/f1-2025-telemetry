@@ -52,7 +52,7 @@ class PacketMonitorThread(threading.Thread):
         key_udp_socket = selector.register(udp_socket, selectors.EVENT_READ)
         key_socketpair = selector.register(self._socketpair[0], selectors.EVENT_READ)
 
-        logging.info("Monitor thread started, reading UDP packets from port {}.".format(self._udp_port))
+        logging.info("Monitor thread started, reading UDP packets from port %d", self._udp_port)
 
         quitflag = False
         while not quitflag:
@@ -97,10 +97,7 @@ class PacketMonitorThread(threading.Thread):
         except:
             distance = math.nan
 
-        message = "frame {:6d} distance {:10.3f}".format(self._current_frame, distance)
-
-        if message is not None:
-            logging.info(message)
+        logging.info("frame %6d distance %10.3f", self._current_frame, distance)
 
     def request_quit(self):
         """Request termination of the PacketMonitorThread.

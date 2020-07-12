@@ -91,7 +91,7 @@ class PacketPlaybackThread(threading.Thread):
                     sock.send(packet)
                     packet_count += 1
                     if packet_count % 500 == 0:
-                        logging.info("{} packages sent, delay: {:.3f} ms".format(packet_count, 1000.0 * delay))
+                        logging.info("%d packages sent, delay: %.3f ms", packet_count, 1000.0 * delay)
                     break
 
 

@@ -69,7 +69,7 @@ class SessionManagerListModel(QAbstractListModel):
     def data(self, index, role):
         if role == Qt.DisplayRole:
             session = self.sessionManager.getSession(index.row())
-            d = "{:016x}".format(session.sessionUID)
+            d = f"{session.sessionUID:016x}"
             return d
         return None
 

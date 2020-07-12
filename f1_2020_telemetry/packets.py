@@ -39,7 +39,7 @@ class PackedLittleEndianStructure(ctypes.LittleEndianStructure):
                 vstr = "[{}]".format(", ".join(repr(e) for e in value))
             else:
                 raise RuntimeError("Bad value {!r} of type {!r}".format(value, type(value)))
-            fstr = "{}={}".format(fname, vstr)
+            fstr = f"{fname}={vstr}"
             fstr_list.append(fstr)
         return "{}({})".format(self.__class__.__name__, ", ".join(fstr_list))
 
@@ -1173,13 +1173,13 @@ def unpack_udp_packet(packet: bytes) -> PackedLittleEndianStructure:
     header_size = ctypes.sizeof(PacketHeader)
 
     if actual_packet_size < header_size:
-        raise UnpackError("Bad telemetry packet: too short ({} bytes).".format(actual_packet_size))
+        raise UnpackError(f"Bad telemetry packet: too short ({actual_packet_size} bytes).")
 
     header = PacketHeader.from_buffer_copy(packet)
     key = (header.packetFormat, header.packetVersion, header.packetId)
 
     if key not in HeaderFieldsToPacketType:
-        raise UnpackError("Bad telemetry packet: no match for key fields {!r}.".format(key))
+        raise UnpackError(f"Bad telemetry packet: no match for key fields {key!r}.")
 
     packet_type = HeaderFieldsToPacketType[key]
 

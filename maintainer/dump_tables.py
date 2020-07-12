@@ -167,7 +167,7 @@ def dump_tables(dump_table_func):
     dump_table_func(sorted(SurfaceTypes.items()), ["ID", "Surface"])
     print()
 
-    ButtonFlagTable = [("0x{:04x}".format(k), v) for (k, v) in sorted((bf.value, ButtonFlag.description[bf]) for bf in ButtonFlag)]
+    ButtonFlagTable = [(f"0x{k:04x}", v) for (k, v) in sorted((bf.value, ButtonFlag.description[bf]) for bf in ButtonFlag)]
     dump_table_func(ButtonFlagTable, ["Bit flags", "Button"])
     print()
 

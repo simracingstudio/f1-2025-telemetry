@@ -107,8 +107,8 @@ class PacketRecorder:
     def _open_database(self, sessionUID: str):
         """Open SQLite3 database file and make sure it has the correct schema."""
         assert self._conn is None
-        filename = "F1_2019_{:s}.sqlite3".format(sessionUID)
-        logging.info("Opening file {!r}.".format(filename))
+        filename = f"F1_2019_{sessionUID}.sqlite3"
+        logging.info("Opening file %s", filename)
         conn = sqlite3.connect(filename)
         cursor = conn.cursor()
 
@@ -131,7 +131,7 @@ class PacketRecorder:
     def _close_database(self):
         """Close SQLite3 database file."""
         assert self._conn is not None
-        logging.info("Closing file {!r}.".format(self._filename))
+        logging.info("Closing file %s", self._filename)
         self._cursor.close()
         self._cursor = None
         self._conn.close()
@@ -217,18 +217,18 @@ class PacketRecorder:
 
             packet_type = HeaderFieldsToPacketType.get(packet_type_tuple)
             if packet_type is None:
-                logging.error("Dropped unrecognized packet (format, version, id) = {!r}.".format(packet_type_tuple))
+                logging.error("Dropped unrecognized packet (format, version, id) = %r.", packet_type_tuple)
                 continue
 
             if len(packet) != ctypes.sizeof(packet_type):
                 logging.error("Dropped packet with unexpected size; "
-                              "(format, version, id) = {!r} packet, size = {}, expected {}.".format(
-                                  packet_type_tuple, len(packet), ctypes.sizeof(packet_type)))
+                              "(format, version, id) = %r packet, size = %d, expected %d.",
+                              packet_type_tuple, len(packet), ctypes.sizeof(packet_type))
                 continue
 
             if header.packetId == PacketID.EVENT:  # Log Event packets
                 event_packet = unpack_udp_packet(packet)
-                logging.info("Recording event packet: {}".format(event_packet.eventStringCode.decode()))
+                logging.info("Recording event packet: %s", event_packet.eventStringCode.decode())
 
             # NOTE: the sessionUID is not reliable at the start of a session (in F1 2018, need to check for F1 2019).
             # See: http://forums.codemasters.com/discussion/138130/bug-f1-2018-pc-v1-0-4-udp-telemetry-bad-session-uid-in-first-few-packets-of-a-session
@@ -242,7 +242,7 @@ class PacketRecorder:
             session_packet = SessionPacket(
                 timestamp,
                 header.packetFormat, header.gameMajorVersion, header.gameMinorVersion,
-                header.packetVersion, header.packetId, "{:016x}".format(header.sessionUID),
+                header.packetVersion, header.packetId, f"{header.sessionUID:016x}",
                 header.sessionTime, header.frameIdentifier, header.playerCarIndex,
                 packet
             )
@@ -265,14 +265,14 @@ class PacketRecorder:
 
         duration = (t2 - t1)
 
-        logging.info("Recorded {} packets in {:.3f} ms.".format(len(timestamped_packets), duration * 1000.0))
+        logging.info("Recorded %d packets in %.3f ms.", len(timestamped_packets), duration * 1000.0)
 
     def no_packets_received(self, age: float) -> None:
         """No packets were received for a considerable time. If a database file is open, close it."""
         if self._conn is None:
-            logging.info("No packets to record for {:.3f} seconds.".format(age))
+            logging.info("No packets to record for %.3f seconds.", age)
         else:
-            logging.info("No packets to record for {:.3f} seconds; closing file due to inactivity.".format(age))
+            logging.info("No packets to record for %.3f seconds; closing file due to inactivity.", age)
             self._close_database()
 
 
@@ -388,7 +388,7 @@ class PacketReceiverThread(threading.Thread):
         key_udp_socket = selector.register(udp_socket, selectors.EVENT_READ)
         key_socketpair = selector.register(self._socketpair[0], selectors.EVENT_READ)
 
-        logging.info("Receiver thread started, reading UDP packets from port {}.".format(self._udp_port))
+        logging.info("Receiver thread started, reading UDP packets from port %d", self._udp_port)
 
         quitflag = False
         while not quitflag:
