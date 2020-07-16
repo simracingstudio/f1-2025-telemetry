@@ -232,6 +232,7 @@ class PacketSessionData_V1(PackedLittleEndianStructure):
         ('marshalZones'             , MarshalZone_V1 * 21),  # List of marshal zones – max 21
         ('safetyCarStatus'          , ctypes.c_uint8     ),  # 0 = no safety car, 1 = full safety car
                                                              # 2 = virtual safety car
+                                                             # 3 = formation lap safety car
         ('networkGame'              , ctypes.c_uint8     ),  # 0 = offline, 1 = online
         ('numWeatherForecastSamples', ctypes.c_uint8),       # Number of weather samples to follow
         ('weatherForecastSamples'   , WeatherForecastSample * 20)  # Array of weather forecast samples
