@@ -20,7 +20,8 @@ F1 2020 Telemetry Packet Specification
    * In struct *PacketMotionData*: corrected comments of the fields *m_angularAccelerationX*, *m_angularAccelerationY*,
      and *m_angularAccelerationZ* to reflect that the values represent accelerations rather than velocities;
    * In struct *CarSetupData*: corrected comment of field *m_rearAntiRollBar* to refer to *rear* instead of *front*;
-   * In the Driver IDs appendix: corrected the name of driver 34: *Wilheim Kaufmann* to *Wilhelm Kaufmann*.
+   * In the Driver IDs appendix: corrected the name of driver 34: *Wilheim Kaufmann* to *Wilhelm Kaufmann*;
+   * In struct *PacketSessionData*: documented value 3 for *m_safetyCarStatus* (formation lap).
 
 The F1 series of games support the output of certain game data across UDP connections.
 This data can be used supply race information to external applications, or to drive certain hardware (e.g. motion platforms, force feedback steering wheels and LED devices).
@@ -239,6 +240,7 @@ The session packet includes details about the current session in progress.
        MarshalZone     m_marshalZones[21];          // List of marshal zones – max 21
        uint8_t         m_safetyCarStatus;           // 0 = no safety car, 1 = full safety car
                                                     // 2 = virtual safety car
+                                                    // 3 = formation lap safety car
        uint8_t         m_networkGame;               // 0 = offline, 1 = online
        uint8_t         m_numWeatherForecastSamples; // Number of weather samples to follow
        WeatherForecastSample m_weatherForecastSamples[20]; // Array of weather forecast samples
