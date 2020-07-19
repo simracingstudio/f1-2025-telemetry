@@ -9,7 +9,7 @@ import argparse
 # Make sure we import from the f1_2020_telemetry package inside the repository.
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(sys.argv[0]), '..')))
 
-from f1_2020_telemetry.packets import PacketID, TeamIDs, DriverIDs, TrackIDs, NationalityIDs, SurfaceTypes, ButtonFlag, EventStringCode
+from f1_2020_telemetry.packets import PacketID, TeamIDs, DriverIDs, TrackIDs, NationalityIDs, SurfaceTypes, ButtonFlag, EventStringCode, PenaltyTypes, InfringementTypes
 
 def dump_table_rst(items, labels, num_rows=None, num_cols=None):
     """Dump a number of items as an ReST markup table.
@@ -137,6 +137,7 @@ def dump_tables(dump_table_func):
         ( "int16_t"  , "Signed 16-bit integer"   ),
         ( "uint32_t" , "Unsigned 32-bit integer" ),
         ( "float"    , "Floating point (32-bit)" ),
+        ( "double"   , "Floating point (64-bit)" ),
         ( "uint64_t" , "Unsigned 64-bit integer" )
     ]
 
@@ -168,6 +169,12 @@ def dump_tables(dump_table_func):
 
     ButtonFlagTable = [("0x{:04x}".format(k), v) for (k, v) in sorted((bf.value, ButtonFlag.description[bf]) for bf in ButtonFlag)]
     dump_table_func(ButtonFlagTable, ["Bit flags", "Button"])
+    print()
+
+    dump_table_func(sorted(InfringementTypes.items()), ["ID", "Infringement meaning"])
+    print()
+
+    dump_table_func(sorted(PenaltyTypes.items()), ["ID", "Penalty meaning"])
     print()
 
 
