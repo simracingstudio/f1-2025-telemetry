@@ -370,6 +370,33 @@ class PacketEventData_V1(PackedLittleEndianStructure):
         ('eventDetails'   , EventDataDetails )   # Event details - should be interpreted differently for each type
     ]
 
+    def __repr__(self):
+        msg = f"{self.__class__.__name__}(header={self.header!r}, eventStringCode={self.eventStringCode!r}"
+
+        event = self.eventStringCode.decode()
+
+        if event in ["CHQF", "DRSD", "DRSE", "SEND", "SSTA"]:
+            end = ")"
+        else:
+            if event == "FTLP":
+                event_str = repr(self.eventDetails.fastestLap)
+            elif event == "PENA":
+                event_str = repr(self.eventDetails.penalty)
+            elif event == "RCWN":
+                event_str = repr(self.eventDetails.raceWinner)
+            elif event == "RTMT":
+                event_str = repr(self.eventDetails.retirement)
+            elif event == "SPTP":
+                event_str = repr(self.eventDetails.speedTrap)
+            elif event == "TMPT":
+                event_str = repr(self.eventDetails.teamMateInPits)
+            else:
+                raise RuntimeError("Bad event code {}", event)
+
+            end = f", eventDetails={event_str})"
+
+        return f"{msg}{end}"
+
 
 @enum.unique
 class EventStringCode(enum.Enum):
