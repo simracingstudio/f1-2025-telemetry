@@ -569,7 +569,8 @@ It includes values such as the damage readings on the car.
        uint8_t     m_tyreVisualCompound;       // F1 visual (can be different from actual compound)
                                                // 16 = soft, 17 = medium, 18 = hard, 7 = inter, 8 = wet
                                                // F1 Classic – same as above
-                                               // F2 – same as above
+                                               // F2 – 19 = super soft, 20 = soft, 21 = medium, 22 = hard
+                                               // 15 = wet
        uint8_t     m_tyresAgeLaps;             // Age in laps of the current set of tyres
        uint8_t     m_tyresDamage[4];           // Tyre damage (percentage)
        uint8_t     m_frontLeftWingDamage;      // Front left wing damage (percentage)
