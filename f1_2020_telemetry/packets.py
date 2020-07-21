@@ -372,31 +372,29 @@ class PacketEventData_V1(PackedLittleEndianStructure):
     ]
 
     def __repr__(self):
-        msg = f"{self.__class__.__name__}(header={self.header!r}, eventStringCode={self.eventStringCode!r}"
-
         event = self.eventStringCode.decode()
 
         if event in ["CHQF", "DRSD", "DRSE", "SEND", "SSTA"]:
             end = ")"
         else:
             if event == "FTLP":
-                event_str = repr(self.eventDetails.fastestLap)
+                event_details = self.eventDetails.fastestLap
             elif event == "PENA":
-                event_str = repr(self.eventDetails.penalty)
+                event_details = self.eventDetails.penalty
             elif event == "RCWN":
-                event_str = repr(self.eventDetails.raceWinner)
+                event_details = self.eventDetails.raceWinner
             elif event == "RTMT":
-                event_str = repr(self.eventDetails.retirement)
+                event_details = self.eventDetails.retirement
             elif event == "SPTP":
-                event_str = repr(self.eventDetails.speedTrap)
+                event_details = self.eventDetails.speedTrap
             elif event == "TMPT":
-                event_str = repr(self.eventDetails.teamMateInPits)
+                event_details = self.eventDetails.teamMateInPits
             else:
                 raise RuntimeError("Bad event code {}", event)
 
-            end = f", eventDetails={event_str})"
+            end = f", eventDetails={event_details!r})"
 
-        return f"{msg}{end}"
+        return f"{self.__class__.__name__}(header={self.header!r}, eventStringCode={self.eventStringCode!r}{end}"
 
 
 @enum.unique
