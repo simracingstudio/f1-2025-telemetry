@@ -219,7 +219,7 @@ class PacketSessionData_V1(PackedLittleEndianStructure):
                                                              # 5 = Q1, 6 = Q2, 7 = Q3, 8 = Short Q, 9 = OSQ
                                                              # 10 = R, 11 = R2, 12 = Time Trial
         ('trackId'                  , ctypes.c_int8      ),  # -1 for unknown, 0-21 for tracks, see appendix
-        ('m_formula'                , ctypes.c_uint8     ),  # Formula, 0 = F1 Modern, 1 = F1 Classic, 2 = F2,
+        ('formula'                  , ctypes.c_uint8     ),  # Formula, 0 = F1 Modern, 1 = F1 Classic, 2 = F2,
                                                              # 3 = F1 Generic
         ('sessionTimeLeft'          , ctypes.c_uint16    ),  # Time left in session in seconds
         ('sessionDuration'          , ctypes.c_uint16    ),  # Session duration in seconds
