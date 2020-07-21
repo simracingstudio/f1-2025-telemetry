@@ -644,7 +644,7 @@ class CarStatusData_V1(PackedLittleEndianStructure):
                                                            # F1 Classic – same as above
                                                            # F2 2019 – 19 = super soft, 20 = soft, 21 = medium, 22 = hard
                                                            # 15 = wet
-        ('typesAgeLaps'            , ctypes.c_uint8    ),  # Age in laps of the current set of tyres
+        ('tyresAgeLaps'            , ctypes.c_uint8    ),  # Age in laps of the current set of tyres
         ('tyresDamage'             , ctypes.c_uint8 * 4),  # Tyre damage (percentage)
         ('frontLeftWingDamage'     , ctypes.c_uint8    ),  # Front left wing damage (percentage)
         ('frontRightWingDamage'    , ctypes.c_uint8    ),  # Front right wing damage (percentage)
