@@ -11,6 +11,7 @@ Compared to the definitions given there, the Python version has the following ch
 (2) In the 'CarSetupData' structure, the comment of the m_rearAntiRollBar refer to rear instead of front. This was corrected.
 (3) In the Driver IDs table, driver 34 has name "Wilheim Kaufmann".
     This is a typo; whenever this driver is encountered in the game, his name is given as "Wilhelm Kaufmann".
+(4) In the 'CarStatusData' structure, tyreVisualCompound was renamed to visualTyreCompound.
 """
 
 import ctypes
