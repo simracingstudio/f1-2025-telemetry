@@ -1,12 +1,15 @@
 """
 Various value enumerations used in the UDP output
 """
-import enum
+
+# pylint: disable=no-member
+
+from enum import IntEnum, unique
 from typing import Dict
 
 
-@enum.unique
-class ButtonFlag(enum.IntEnum):
+@unique
+class ButtonFlag(IntEnum):
     """Bit-mask values for the 'button' field in Car Telemetry Data packets."""
 
     _ignore_ = "description"
@@ -27,7 +30,7 @@ class ButtonFlag(enum.IntEnum):
     LEFT_STICK_CLICK = 0x2000
     RIGHT_STICK_CLICK = 0x4000
 
-    description: Dict[enum.IntEnum, str]
+    description: Dict[IntEnum, str]
 
 
 ButtonFlag.description = {
@@ -127,6 +130,31 @@ DriverIDs = {
     87: "Anthoine Hubert",
     88: "Giuliano Alesi",
     89: "Ralph Boschung",
+}
+
+
+@unique
+class FormulaIDs(IntEnum):
+    """Different race classes"""
+
+    _ignore_ = "description"
+
+    F12020 = 0
+    F1Classic = 1
+    F2 = 2
+    F1 = 3  # F1 - Multiplayer cars
+
+    description: Dict[IntEnum, str]
+
+    def __str__(self):
+        return FormulaIDs.description[self]
+
+
+FormulaIDs.description = {
+    FormulaIDs.F12020: "F1 2020",
+    FormulaIDs.F1Classic: "F1 Classic",
+    FormulaIDs.F2: "F2 2019",
+    FormulaIDs.F1: "F1",
 }
 
 InfringementTypes = {
@@ -296,6 +324,105 @@ PenaltyTypes = {
     17: "Black flag timer",
 }
 
+
+@unique
+class PitStatus(IntEnum):
+    """Car pit status"""
+
+    NotPitting = 0
+    Pitting = 1
+    InPitArea = 2
+
+
+@unique
+class SafetyCarType(IntEnum):
+    """Safety car status"""
+
+    _ignore_ = "description"
+
+    No = 0
+    Full = 1
+    Virtual = 2
+    FormationLap = 3
+
+    description: Dict[IntEnum, str]
+
+    def __str__(self):
+        return SafetyCarType.description[self]
+
+
+SafetyCarType.description = {
+    SafetyCarType.No: "Safety car in",
+    SafetyCarType.Full: "Safety car out",
+    SafetyCarType.Virtual: "Virtual safety car out",
+    SafetyCarType.FormationLap: "Formation lap safety car out",
+}
+
+
+class SessionType(IntEnum):
+    """Race session type"""
+
+    _ignore_ = "description short_description"
+
+    Unknown = 0
+    FreePracticeOne = 1
+    FreePracticeTwo = 2
+    FreePracticeThree = 3
+    Practice = 4
+    QualifierOne = 5
+    QualifierTwo = 6
+    QualifierThree = 7
+    ShortQualifier = 8
+    OneShotQualifier = 9
+    Race = 10
+    SprintRace = 11
+    TimeTrial = 12
+
+    description: Dict[IntEnum, str]
+    short_description: Dict[IntEnum, str]
+
+    def __init__(self, session_type):
+        super().__init__()
+        self.race = session_type in [10, 11]
+        self.qualifier = session_type in [5, 6, 7, 8, 9]
+        self.race = session_type in [10, 11]
+
+    def __str__(self):
+        return SessionType.description[self]
+
+
+SessionType.short_description = {
+    SessionType.Unknown: "UNKN",
+    SessionType.FreePracticeOne: "FP1",
+    SessionType.FreePracticeTwo: "FP2",
+    SessionType.FreePracticeThree: "FP3",
+    SessionType.Practice: "P",
+    SessionType.Race: "R",
+    SessionType.SprintRace: "R2",
+    SessionType.TimeTrial: "TT",
+    SessionType.ShortQualifier: "Q",
+    SessionType.QualifierOne: "Q1",
+    SessionType.QualifierTwo: "Q2",
+    SessionType.QualifierThree: "Q3",
+    SessionType.OneShotQualifier: "OSQ",
+}
+
+SessionType.description = {
+    SessionType.Unknown: "Unknown",
+    SessionType.FreePracticeOne: "Free Practice 1",
+    SessionType.FreePracticeTwo: "Free Practice 2",
+    SessionType.FreePracticeThree: "Free Practice 3",
+    SessionType.Practice: "Practice",
+    SessionType.Race: "Race",
+    SessionType.SprintRace: "Sprint race",
+    SessionType.TimeTrial: "Time Trial",
+    SessionType.ShortQualifier: "Short Qualifier",
+    SessionType.QualifierOne: "Qualifier 1",
+    SessionType.QualifierTwo: "Qualifier 2",
+    SessionType.QualifierThree: "Qualifier 3",
+    SessionType.OneShotQualifier: "One-shot Qualifier",
+}
+
 # These surface types are from physics data and show what type of contact each wheel is experiencing.
 SurfaceTypes = {
     0: "Tarmac",
@@ -358,31 +485,117 @@ TeamIDs = {
     255: "My Team",
 }
 
-TrackIDs = {
-    0: "Melbourne",
-    1: "Paul Ricard",
-    2: "Shanghai",
-    3: "Sakhir (Bahrain)",
-    4: "Catalunya",
-    5: "Monaco",
-    6: "Montreal",
-    7: "Silverstone",
-    9: "Hungaroring",
-    10: "Spa",
-    11: "Monza",
-    12: "Singapore",
-    13: "Suzuka",
-    14: "Abu Dhabi",
-    15: "Texas",
-    16: "Brazil",
-    17: "Austria",
-    18: "Sochi",
-    19: "Mexico",
-    20: "Baku (Azerbaijan)",
-    21: "Sakhir Short",
-    22: "Silverstone Short",
-    23: "Texas Short",
-    24: "Suzuka Short",
-    25: "Hanoi",
-    26: "Zandvoort",
+
+class TrackIDs(IntEnum):
+    """Tracks"""
+
+    _ignore_ = "description"
+
+    Australia = 0
+    Melbourne = 0
+    France = 1
+    PaulRicard = 1
+    China = 2
+    Shanghai = 2
+    Bahrain = 3
+    Spain = 4
+    Monaco = 5
+    Canada = 6
+    GillesVilleneuve = 6
+    Montreal = 6
+    Britain = 7
+    Silverstone = 7
+    Hungaroring = 9
+    Hungary = 9
+    Belgium = 10
+    Spa = 10
+    Italy = 11
+    Monza = 11
+    Singapore = 12
+    Japan = 13
+    Suzuka = 13
+    AbuDhabi = 14
+    CircuitOfTheAmericas = 15
+    USA = 15
+    Brazil = 16
+    Austria = 17
+    Russia = 18
+    Sochi = 18
+    Mexico = 19
+    Azerbaijan = 20
+    Baku = 20
+    BahrainShort = 21
+    BritainShort = 22
+    SilverStoneShort = 22
+    CircuitOfTheAmericasShort = 23
+    USAShort = 23
+    JapanShort = 24
+    SuzukaShort = 24
+    Hanoi = 25
+    Vietnam = 25
+    Netherlands = 26
+    Zandvoort = 26
+
+    description: Dict[IntEnum, str]
+
+    def __str__(self):
+        return TrackIDs.description[self]
+
+
+TrackIDs.description = {
+    TrackIDs.AbuDhabi: "Abu Dhabi",
+    TrackIDs.Austria: "Austria",
+    TrackIDs.Australia: "Australia",
+    TrackIDs.Azerbaijan: "Azerbaijan",
+    TrackIDs.Bahrain: "Bahrain",
+    TrackIDs.BahrainShort: "Bahrain (Short)",
+    TrackIDs.Belgium: "Belgium",
+    TrackIDs.Brazil: "Brazil",
+    TrackIDs.Britain: "Britain",
+    TrackIDs.BritainShort: "Britain (Short)",
+    TrackIDs.Canada: "Canada",
+    TrackIDs.China: "China",
+    TrackIDs.France: "France",
+    TrackIDs.Hungary: "Hungary",
+    TrackIDs.Italy: "Italy",
+    TrackIDs.Japan: "Japan",
+    TrackIDs.JapanShort: "Japan (Short)",
+    TrackIDs.Monaco: "Monaco",
+    TrackIDs.Mexico: "Mexico",
+    TrackIDs.Netherlands: "Netherlands",
+    TrackIDs.Russia: "Russia",
+    TrackIDs.Singapore: "Singapore",
+    TrackIDs.Spain: "Spain",
+    TrackIDs.USA: "USA",
+    TrackIDs.USAShort: "USA (Short)",
+    TrackIDs.Vietnam: "Vietnam",
+}
+
+
+@unique
+class WeatherIDs(IntEnum):
+    """Weather types"""
+
+    _ignore_ = "description"
+
+    Clear = 0
+    LightCloud = 1
+    Overcast = 2
+    LightRain = 3
+    HeavyRain = 4
+    Storm = 5
+
+    description: Dict[IntEnum, str]
+
+    def __str__(self):
+        return WeatherIDs.description[self]
+
+
+WeatherIDs.description = {
+    WeatherIDs.Clear: "Clear",
+    WeatherIDs.LightCloud: "Light cloud",
+    WeatherIDs.Overcast: "Overcast",
+    WeatherIDs.LightRain: "Light rain",
+    WeatherIDs.HeavyRain: "Heavy rain",
+    WeatherIDs.Storm: "Storm",
 }
