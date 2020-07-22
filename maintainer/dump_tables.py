@@ -9,7 +9,10 @@ import argparse
 # Make sure we import from the f1_2020_telemetry package inside the repository.
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(sys.argv[0]), '..')))
 
-from f1_2020_telemetry.packets import PacketID, TeamIDs, DriverIDs, TrackIDs, NationalityIDs, SurfaceTypes, ButtonFlag, EventStringCode, PenaltyTypes, InfringementTypes
+from f1_2020_telemetry.packets import PacketID, EventStringCode
+from f1_2020_telemetry.types import ButtonFlag, DriverIDs, InfringementTypes, NationalityIDs, PenaltyTypes, \
+    SurfaceTypes, TeamIDs, TrackIDs
+
 
 def dump_table_rst(items, labels, num_rows=None, num_cols=None):
     """Dump a number of items as an ReST markup table.
