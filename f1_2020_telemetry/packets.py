@@ -899,7 +899,6 @@ TrackIDs = {
      5 : 'Monaco',
      6 : 'Montreal',
      7 : 'Silverstone',
-     8 : 'Hockenheim',
      9 : 'Hungaroring',
     10 : 'Spa',
     11 : 'Monza',
