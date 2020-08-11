@@ -3,7 +3,7 @@ repos:
   hooks:
     - id: check-hooks-apply
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v3.1.0
+  rev: v3.2.0
   hooks:
     - id: check-added-large-files
       args: ['--maxkb=1000']
@@ -18,7 +18,7 @@ repos:
       args: ['--fix=lf']
     - id: trailing-whitespace
 - repo: https://github.com/asottile/pyupgrade
-  rev: v2.7.1
+  rev: v2.7.2
   hooks:
     - id: pyupgrade
       args: ['--py37-plus']
