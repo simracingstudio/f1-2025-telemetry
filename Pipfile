@@ -5,6 +5,6 @@ verify_ssl = true
 
 [dev-packages]
 pre-commit = "*"
-sphinx = ">=2.2.0"
-sphinx_rtd_theme = "*"
+Sphinx = ">=2.2.0"
+sphinx-rtd-theme = "*"
 twine = "*"
