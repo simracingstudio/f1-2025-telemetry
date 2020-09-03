@@ -18,7 +18,7 @@ class PacketMonitorThread(threading.Thread):
     """The PacketMonitorThread receives incoming telemetry packets via the network and shows interesting information."""
 
     def __init__(self, udp_port):
-        super().__init__(name='monitor')
+        super().__init__(name="monitor")
         self._udp_port = udp_port
         self._socketpair = socket.socketpair()
 
@@ -35,24 +35,31 @@ class PacketMonitorThread(threading.Thread):
         This method runs in its own thread.
         """
 
-        udp_socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
+        udp_socket = socket.socket(
+            family=socket.AF_INET, type=socket.SOCK_DGRAM
+        )
 
         # Allow multiple receiving endpoints.
-        if sys.platform in ['darwin']:
+        if sys.platform in ["darwin"]:
             udp_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
-        elif sys.platform in ['linux', 'win32']:
+        elif sys.platform in ["linux", "win32"]:
             udp_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
         # Accept UDP packets from any host.
-        address = ('', self._udp_port)
+        address = ("", self._udp_port)
         udp_socket.bind(address)
 
         selector = selectors.DefaultSelector()
 
         key_udp_socket = selector.register(udp_socket, selectors.EVENT_READ)
-        key_socketpair = selector.register(self._socketpair[0], selectors.EVENT_READ)
+        key_socketpair = selector.register(
+            self._socketpair[0], selectors.EVENT_READ
+        )
 
-        logging.info("Monitor thread started, reading UDP packets from port %d", self._udp_port)
+        logging.info(
+            "Monitor thread started, reading UDP packets from port %d",
+            self._udp_port,
+        )
 
         quitflag = False
         while not quitflag:
@@ -83,7 +90,6 @@ class PacketMonitorThread(threading.Thread):
 
         self._current_frame_data[PacketID(packet.header.packetId)] = packet
 
-
     def report(self):
         if self._current_frame is None:
             return
@@ -93,7 +99,11 @@ class PacketMonitorThread(threading.Thread):
         player_car = any_packet.header.playerCarIndex
 
         try:
-            distance = self._current_frame_data[PacketID.LAP_DATA].lapData[player_car].totalDistance
+            distance = (
+                self._current_frame_data[PacketID.LAP_DATA]
+                .lapData[player_car]
+                .totalDistance
+            )
         except:
             distance = math.nan
 
@@ -104,7 +114,7 @@ class PacketMonitorThread(threading.Thread):
 
         Called from the main thread to request that we quit.
         """
-        self._socketpair[1].send(b'\x00')
+        self._socketpair[1].send(b"\x00")
 
 
 def main():
@@ -112,14 +122,26 @@ def main():
 
     # Configure logging.
 
-    logging.basicConfig(level=logging.DEBUG, format="%(asctime)-23s | %(threadName)-10s | %(levelname)-5s | %(message)s")
-    logging.Formatter.default_msec_format = '%s.%03d'
+    logging.basicConfig(
+        level=logging.DEBUG,
+        format="%(asctime)-23s | %(threadName)-10s | %(levelname)-5s | %(message)s",
+    )
+    logging.Formatter.default_msec_format = "%s.%03d"
 
     # Parse command line arguments.
 
-    parser = argparse.ArgumentParser(description="Monitor UDP port for incoming F1 2019 telemetry data and print information.")
+    parser = argparse.ArgumentParser(
+        description="Monitor UDP port for incoming F1 2019 telemetry data and print information."
+    )
 
-    parser.add_argument("-p", "--port", default=20777, type=int, help="UDP port to listen to (default: 20777)", dest='port')
+    parser.add_argument(
+        "-p",
+        "--port",
+        default=20777,
+        type=int,
+        help="UDP port to listen to (default: 20777)",
+        dest="port",
+    )
 
     args = parser.parse_args()
 

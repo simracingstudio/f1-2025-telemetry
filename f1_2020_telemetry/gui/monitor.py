@@ -6,12 +6,22 @@ import sys
 from collections import namedtuple, Counter
 
 from PyQt5.QtCore import QObject, pyqtSignal, QAbstractListModel, QVariant, Qt
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QHBoxLayout, QLabel, QListView
+from PyQt5.QtWidgets import (
+    QApplication,
+    QMainWindow,
+    QWidget,
+    QHBoxLayout,
+    QLabel,
+    QListView,
+)
 from PyQt5.QtNetwork import QAbstractSocket, QUdpSocket
 
 from f1_2020_telemetry.packets import PacketID, unpack_udp_packet, UnpackError
 
-IncomingPacket = namedtuple("IncomingPacket", "timestamp, recv_port, src_address, src_port, packet")
+IncomingPacket = namedtuple(
+    "IncomingPacket", "timestamp, recv_port, src_address, src_port, packet"
+)
+
 
 class Session(QObject):
     def __init__(self, sessionUID, first_timestamp, *args, **kwargs):
@@ -25,7 +35,7 @@ class Session(QObject):
         packet_id = PacketID(incomingPacket.packet.header.packetId)
         self.counter += 1
         self.cmap[packet_id] += 1
-        #print(self.sessionUID, self.counter, self.cmap)
+        # print(self.sessionUID, self.counter, self.cmap)
         if packet_id == PacketID.PARTICIPANTS:
             print(incomingPacket)
 
@@ -54,6 +64,7 @@ class SessionManager(QObject):
     def getSession(self, index):
         return self.session_list[index]
 
+
 class SessionManagerListModel(QAbstractListModel):
     def __init__(self, sessionManager, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -77,8 +88,8 @@ class SessionManagerListModel(QAbstractListModel):
         self.beginResetModel()
         self.endResetModel()
 
-class MyCentralWidget(QWidget):
 
+class MyCentralWidget(QWidget):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         layout = QHBoxLayout()
@@ -93,7 +104,6 @@ class MyCentralWidget(QWidget):
 
 
 class MyMainWindow(QMainWindow):
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         centralWidget = MyCentralWidget()
@@ -128,7 +138,9 @@ class UdpSocketMonitor(QObject):
             (datagram, address, port) = self.sock.readDatagram(2048)
             try:
                 packet = unpack_udp_packet(datagram)
-                incoming_packet = IncomingPacket(timestamp, self.port, address.toString(), port, packet)
+                incoming_packet = IncomingPacket(
+                    timestamp, self.port, address.toString(), port, packet
+                )
                 self.incomingPacket.emit(incoming_packet)
             except UnpackError:
                 pass
@@ -149,20 +161,22 @@ class NetworkMonitor(QObject):
 
 
 class MyApplication(QApplication):
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.networkMonitor = NetworkMonitor([20777])
         self.sessionManager = SessionManager()
 
-        self.networkMonitor.incomingPacket.connect(self.sessionManager.processIncomingPacket)
+        self.networkMonitor.incomingPacket.connect(
+            self.sessionManager.processIncomingPacket
+        )
 
         self.mainWindow = MyMainWindow()
         self.mainWindow.show()
 
 
 app = None
+
 
 def main():
     global app

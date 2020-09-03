@@ -6,8 +6,10 @@ import selectors
 import socket
 import logging
 
+
 class Barrier:
     """A class that allows external notification of a desire to proceed, and a cheap (sleeping) wait function until that notification comes."""
+
     def __init__(self):
         self._proceed_flag = False
         self._cv = threading.Condition(threading.Lock())
@@ -28,7 +30,7 @@ class WaitConsoleThread(threading.Thread):
     """The WaitConsoleThread runs until console input is available (or it is asked to quit before)."""
 
     def __init__(self, quit_barrier):
-        super().__init__(name='console')
+        super().__init__(name="console")
         self._quit_barrier = quit_barrier
         self._socketpair = socket.socketpair()
 
@@ -42,8 +44,10 @@ class WaitConsoleThread(threading.Thread):
         The run method executes in its own thread.
         """
         selector = selectors.DefaultSelector()
-        key_socketpair = selector.register(self._socketpair[0], selectors.EVENT_READ)
-        key_stdin      = selector.register(sys.stdin, selectors.EVENT_READ)
+        key_socketpair = selector.register(
+            self._socketpair[0], selectors.EVENT_READ
+        )
+        key_stdin = selector.register(sys.stdin, selectors.EVENT_READ)
 
         logging.info("Console wait thread started.")
 
@@ -61,4 +65,4 @@ class WaitConsoleThread(threading.Thread):
 
     def request_quit(self):
         """Called from the any thread to request that we quit."""
-        self._socketpair[1].send(b'\x00')
+        self._socketpair[1].send(b"\x00")

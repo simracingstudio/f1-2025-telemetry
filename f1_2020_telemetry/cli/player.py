@@ -18,8 +18,10 @@ from ..packets import HeaderFieldsToPacketType
 class PacketPlaybackThread(threading.Thread):
     """The PacketPlaybackThread reads telemetry data from an SQLite3 file and plays it back as UDP packets."""
 
-    def __init__(self, filename, destination, port, realtime_factor, quit_barrier):
-        super().__init__(name='playback')
+    def __init__(
+        self, filename, destination, port, realtime_factor, quit_barrier
+    ):
+        super().__init__(name="playback")
         self._filename = filename
         self._destination = destination
         self._port = port
@@ -40,14 +42,16 @@ class PacketPlaybackThread(threading.Thread):
         The run method executes in its own thread.
         """
         selector = selectors.DefaultSelector()
-        key_socketpair = selector.register(self._socketpair[0], selectors.EVENT_READ)
+        key_socketpair = selector.register(
+            self._socketpair[0], selectors.EVENT_READ
+        )
 
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        #sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        # sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
         if self._destination is None:
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-            sock.connect(('<broadcast>', self._port))
+            sock.connect(("<broadcast>", self._port))
         else:
             sock.connect((self._destination, self._port))
 
@@ -74,7 +78,10 @@ class PacketPlaybackThread(threading.Thread):
             (timestamp, packet) = timestamped_packet
             if t_first_packet is None:
                 t_first_packet = timestamp
-            t_playback = t_start_playback + (timestamp - t_first_packet) / self._realtime_factor
+            t_playback = (
+                t_start_playback
+                + (timestamp - t_first_packet) / self._realtime_factor
+            )
 
             while True:
                 t_sleep = max(0.0, t_playback - time.monotonic())
@@ -91,9 +98,12 @@ class PacketPlaybackThread(threading.Thread):
                     sock.send(packet)
                     packet_count += 1
                     if packet_count % 500 == 0:
-                        logging.info("%d packages sent, delay: %.3f ms", packet_count, 1000.0 * delay)
+                        logging.info(
+                            "%d packages sent, delay: %.3f ms",
+                            packet_count,
+                            1000.0 * delay,
+                        )
                     break
-
 
         cursor.close()
         conn.close()
@@ -106,24 +116,50 @@ class PacketPlaybackThread(threading.Thread):
 
     def request_quit(self):
         """Called from the main thread to request that we quit."""
-        self._socketpair[1].send(b'\x00')
+        self._socketpair[1].send(b"\x00")
 
 
 def main():
 
     # Configure logging.
 
-    logging.basicConfig(level=logging.DEBUG, format="%(asctime)-23s | %(threadName)-10s | %(levelname)-5s | %(message)s")
-    logging.Formatter.default_msec_format = '%s.%03d'
+    logging.basicConfig(
+        level=logging.DEBUG,
+        format="%(asctime)-23s | %(threadName)-10s | %(levelname)-5s | %(message)s",
+    )
+    logging.Formatter.default_msec_format = "%s.%03d"
 
     # Parse command line arguments.
 
-    parser = argparse.ArgumentParser(description="Replay an F1 2019 session as UDP packets.")
+    parser = argparse.ArgumentParser(
+        description="Replay an F1 2019 session as UDP packets."
+    )
 
-    parser.add_argument("-r", "--rtf", dest='realtime_factor', type=float, default=1.0, help="playback real-time factor (higher is faster, default=1.0)")
-    parser.add_argument("-d", "--destination", type=str, default=None, help="destination UDP address; omit to use broadcast (default)")
-    parser.add_argument("-p", "--port", type=int, default=20777, help="destination UDP port (default: 20777)")
-    parser.add_argument("filename", type=str, help="SQLite3 file to replay packets from")
+    parser.add_argument(
+        "-r",
+        "--rtf",
+        dest="realtime_factor",
+        type=float,
+        default=1.0,
+        help="playback real-time factor (higher is faster, default=1.0)",
+    )
+    parser.add_argument(
+        "-d",
+        "--destination",
+        type=str,
+        default=None,
+        help="destination UDP address; omit to use broadcast (default)",
+    )
+    parser.add_argument(
+        "-p",
+        "--port",
+        type=int,
+        default=20777,
+        help="destination UDP port (default: 20777)",
+    )
+    parser.add_argument(
+        "filename", type=str, help="SQLite3 file to replay packets from"
+    )
 
     args = parser.parse_args()
 
@@ -131,7 +167,13 @@ def main():
 
     quit_barrier = Barrier()
 
-    playback_thread = PacketPlaybackThread(args.filename, args.destination, args.port, args.realtime_factor, quit_barrier)
+    playback_thread = PacketPlaybackThread(
+        args.filename,
+        args.destination,
+        args.port,
+        args.realtime_factor,
+        quit_barrier,
+    )
     playback_thread.start()
 
     wait_console_thread = WaitConsoleThread(quit_barrier)
