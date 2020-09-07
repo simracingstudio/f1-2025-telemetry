@@ -1,0 +1,14 @@
+[flake8]
+exclude =
+    .git,
+    dist,
+    docs/source/*.py,
+    maintainer/dump_tables.py,
+    f1_2020_telemetry/cli/*.py,
+    f1_2020_telemetry/gui/*.py
+extend-ignore =
+    # Black
+    E203,
+    E501
+format = pylint
+max-line-length = 88
