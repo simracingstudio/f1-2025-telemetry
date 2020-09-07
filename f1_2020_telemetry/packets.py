@@ -34,7 +34,8 @@ class PackedLittleEndianStructure(ctypes.LittleEndianStructure):
 
     def __repr__(self):
         fstr_list = []
-        for (fname, ftype) in self._fields_:
+        for field in self._fields_:
+            fname = field[0]
             value = getattr(self, fname)
             if isinstance(
                 value, (PackedLittleEndianStructure, int, float, bytes)
@@ -394,7 +395,7 @@ class PacketEventData_V1(PackedLittleEndianStructure):
             elif event == "TMPT":
                 event_details = self.eventDetails.teamMateInPits
             else:
-                raise RuntimeError("Bad event code {}", event)
+                raise RuntimeError(f"Bad event code {event}")
 
             end = f", eventDetails={event_details!r})"
 

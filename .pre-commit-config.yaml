@@ -25,6 +25,10 @@ repos:
   rev: 3.8.3
   hooks:
     - id: flake8
+- repo: https://github.com/PyCQA/pylint.git
+  rev: pylint-2.6.0
+  hooks:
+    - id: pylint
 - repo: https://github.com/asottile/pyupgrade
   rev: v2.7.2
   hooks:

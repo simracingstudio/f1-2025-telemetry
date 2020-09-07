@@ -1,0 +1,24 @@
+[MASTER]
+disable=bad-continuation,
+    invalid-name,
+    line-too-long,
+    too-many-arguments,
+    too-many-branches,
+    too-many-instance-attributes,
+    too-many-locals,
+    missing-class-docstring,
+    missing-function-docstring,
+    missing-module-docstring,
+    no-name-in-module,
+    no-self-use,
+    too-few-public-methods
+
+ignore=.git,
+    conf.py,
+    dump_tables.py,
+    monitor.py,
+    player.py,
+    recorder.py,
+    threading_utils.py
+
+msg-template={path}:{line}: [{msg_id}, {obj}] {msg} ({symbol})
