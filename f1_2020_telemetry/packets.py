@@ -826,25 +826,3 @@ def unpack_udp_packet(packet: bytes) -> PackedLittleEndianStructure:
         )
 
     return packet_type.from_buffer_copy(packet)
-
-
-#########################################################################
-#                                                                       #
-#  Verify packet sizes if this module is executed rather than imported  #
-#                                                                       #
-#########################################################################
-
-if __name__ == "__main__":
-
-    # Check all the packet sizes.
-
-    assert ctypes.sizeof(PacketMotionData_V1) == 1464
-    assert ctypes.sizeof(PacketSessionData_V1) == 251
-    assert ctypes.sizeof(PacketLapData_V1) == 1190
-    assert ctypes.sizeof(PacketEventData_V1) == 35
-    assert ctypes.sizeof(PacketParticipantsData_V1) == 1213
-    assert ctypes.sizeof(PacketCarSetupData_V1) == 1102
-    assert ctypes.sizeof(PacketCarTelemetryData_V1) == 1307
-    assert ctypes.sizeof(PacketCarStatusData_V1) == 1344
-    assert ctypes.sizeof(PacketFinalClassificationData_V1) == 839
-    assert ctypes.sizeof(PacketLobbyInfoData_V1) == 1169
