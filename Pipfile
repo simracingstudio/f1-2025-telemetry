@@ -6,6 +6,7 @@ verify_ssl = true
 [packages]
 
 [dev-packages]
+bump2version = "*"
 pre-commit = "*"
 pytest = "*"
 Sphinx = ">=2.2.0"
