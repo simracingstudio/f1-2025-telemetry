@@ -21,7 +21,7 @@ copyright = "2020, Guillaume Parent"
 author = "Guillaume Parent"
 
 # The full version, including alpha/beta/rc tags
-release = "0.1.3"
+release = "0.2.0"
 
 # -- General configuration ---------------------------------------------------
 

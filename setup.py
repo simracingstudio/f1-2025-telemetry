@@ -7,7 +7,7 @@ with open("README.md") as fi:
 
 setup(
     name="f1-2020-telemetry",
-    version="0.1.3",
+    version="0.2.0",
     author="Guillaume Parent",
     author_email="gp@gparent.net",
     description="A package to handle UDP telemetry data as sent by the F1 2020 game.",
