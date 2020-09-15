@@ -1,9 +1,11 @@
 #! /usr/bin/env python3
 
-from setuptools import setup
+from setuptools import find_packages, setup
 
 with open("README.md") as fi:
     long_description = fi.read()
+
+packages = find_packages()
 
 setup(
     name="f1-2020-telemetry",
@@ -18,9 +20,7 @@ setup(
         "Documentation": "https://f1-2020-telemetry.readthedocs.io/en/latest/",
         "Source Repository": "https://gitlab.com/gparent/f1-2020-telemetry/",
     },
-    # Since we don't have __init__.py files, our packages aren't found by setuptools.find_packages().
-    # We therefore specify them explicitly here.
-    packages=["f1_2020_telemetry", "f1_2020_telemetry.cli"],
+    packages=packages,
     entry_points={
         "console_scripts": [
             "f1-2020-telemetry-recorder=f1_2020_telemetry.cli.recorder:main",
