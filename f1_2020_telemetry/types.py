@@ -1,4 +1,5 @@
 import enum
+from typing import Dict
 
 ###################################################################
 #                                                                 #
@@ -10,6 +11,8 @@ import enum
 @enum.unique
 class ButtonFlag(enum.IntEnum):
     """Bit-mask values for the 'button' field in Car Telemetry Data packets."""
+
+    _ignore_ = "description"
 
     CROSS = 0x0001
     TRIANGLE = 0x0002
@@ -26,6 +29,8 @@ class ButtonFlag(enum.IntEnum):
     R2 = 0x1000
     LEFT_STICK_CLICK = 0x2000
     RIGHT_STICK_CLICK = 0x4000
+
+    description: Dict[enum.IntEnum, str]
 
 
 ButtonFlag.description = {

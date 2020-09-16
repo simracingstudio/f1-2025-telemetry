@@ -16,6 +16,7 @@ Compared to the definitions given there, the Python version has the following ch
 
 import ctypes
 import enum
+from typing import Dict
 
 #########################################################
 #                                                       #
@@ -80,6 +81,8 @@ class PacketHeader(PackedLittleEndianStructure):
 class PacketID(enum.IntEnum):
     """Value as specified in the PacketHeader.packetId header field, used to distinguish packet types."""
 
+    _ignore_ = "long_description short_description"
+
     MOTION = 0
     SESSION = 1
     LAP_DATA = 2
@@ -90,6 +93,9 @@ class PacketID(enum.IntEnum):
     CAR_STATUS = 7
     FINAL_CLASSIFICATION = 8
     LOBBY_INFO = 9
+
+    long_description: Dict[enum.IntEnum, str]
+    short_description: Dict[enum.IntEnum, str]
 
 
 PacketID.short_description = {
@@ -406,6 +412,8 @@ class PacketEventData_V1(PackedLittleEndianStructure):
 class EventStringCode(enum.Enum):
     """Value as specified in the PacketEventData_V1.eventStringCode header field, used to distinguish packet types."""
 
+    _ignore_ = "long_description short_description"
+
     SSTA = b"SSTA"
     SEND = b"SEND"
     FTLP = b"FTLP"
@@ -417,6 +425,9 @@ class EventStringCode(enum.Enum):
     RCWN = b"RCWN"
     PENA = b"PENA"
     SPTP = b"SPTP"
+
+    long_description: Dict[enum.Enum, str]
+    short_description: Dict[enum.Enum, str]
 
 
 EventStringCode.short_description = {
