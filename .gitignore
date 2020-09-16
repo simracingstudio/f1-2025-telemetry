@@ -1,8 +1,9 @@
 __pycache__
-.idea/
+dist
 docs/build
 docs/source/generated
-dist
 venv/
-*.sqlite3
+.idea/
+*.egg-info/
 *.pyc
+*.sqlite3
