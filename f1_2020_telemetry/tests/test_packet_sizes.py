@@ -1,5 +1,5 @@
 import ctypes
-from ..packets import (
+from f1_2020_telemetry.packets import (
     PacketCarSetupData_V1,
     PacketCarStatusData_V1,
     PacketCarTelemetryData_V1,

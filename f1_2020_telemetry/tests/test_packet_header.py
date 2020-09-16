@@ -1,6 +1,6 @@
 import ctypes
 
-from ..packets import PacketHeader
+from f1_2020_telemetry.packets import PacketHeader
 
 
 def test_packet_header():
