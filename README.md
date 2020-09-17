@@ -5,7 +5,7 @@ F1 2020 UDP Telemetry package
 The f1-2020-telemetry package provides support for interpreting telemetry information as sent out over the network by [the F1 2020 game by CodeMasters](https://www.codemasters.com/game/f1-2020/).
 It also provides command-line tools to record, playback, and monitor F1 2020 session data.
 
-With each yearly release of the F1 series game, CodeMasters post a descripton of the corresponding telemetry packet format on their forum.
+With each yearly release of the F1 series game, CodeMasters post a description of the corresponding telemetry packet format on their forum.
 For F1 2020, the packet format is described here: https://forums.codemasters.com/topic/50942-f1-2020-udp-specification/
 
 The package should work on Python 3.6 and above.
