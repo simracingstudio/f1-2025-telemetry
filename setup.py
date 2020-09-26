@@ -1,5 +1,9 @@
 #! /usr/bin/env python3
 
+"""
+Package setup file
+"""
+
 from setuptools import find_packages, setup
 
 with open("README.md") as fi:

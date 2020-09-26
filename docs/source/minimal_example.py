@@ -1,3 +1,6 @@
+"""
+Listen to telemetry packets and print them to standard output
+"""
 import socket
 
 from f1_2020_telemetry.packets import unpack_udp_packet

@@ -1,11 +1,8 @@
+"""
+Various value enumerations used in the UDP output
+"""
 import enum
 from typing import Dict
-
-###################################################################
-#                                                                 #
-#  Appendices: various value enumerations used in the UDP output  #
-#                                                                 #
-###################################################################
 
 
 @enum.unique

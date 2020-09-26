@@ -1,3 +1,6 @@
+"""
+Test packet sizes
+"""
 import ctypes
 from f1_2020_telemetry.packets import (
     PacketCarSetupData_V1,
@@ -14,6 +17,8 @@ from f1_2020_telemetry.packets import (
 
 
 def test_packet_sizes():
+    """Tests that each telemetry packet type has its expected size"""
+
     assert ctypes.sizeof(PacketMotionData_V1) == 1464
     assert ctypes.sizeof(PacketSessionData_V1) == 251
     assert ctypes.sizeof(PacketLapData_V1) == 1190

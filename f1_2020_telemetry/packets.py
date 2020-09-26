@@ -314,6 +314,8 @@ class PacketLapData_V1(PackedLittleEndianStructure):
 
 
 class FastestLapData(PackedLittleEndianStructure):
+    """Event data for fastest lap (FTLP)"""
+
     _fields_ = [
         ("vehicleIdx", ctypes.c_uint8),  # Vehicle index of car
         ("lapTime", ctypes.c_float),  # Lap time is in seconds
@@ -321,6 +323,8 @@ class FastestLapData(PackedLittleEndianStructure):
 
 
 class PenaltyData(PackedLittleEndianStructure):
+    """Event data for penalty (PENA)"""
+
     _fields_ = [
         ("penaltyType", ctypes.c_uint8),
         ("infringementType", ctypes.c_uint8),
@@ -333,28 +337,38 @@ class PenaltyData(PackedLittleEndianStructure):
 
 
 class RaceWinnerData(PackedLittleEndianStructure):
+    """Event data for race winner (RCWN)"""
+
     _fields_ = [
         ("vehicleIdx", ctypes.c_uint8),
     ]
 
 
 class RetirementData(PackedLittleEndianStructure):
+    """Event data for retirement (RTMT)"""
+
     _fields_ = [
         ("vehicleIdx", ctypes.c_uint8),
     ]
 
 
 class SpeedTrapData(PackedLittleEndianStructure):
+    """Event data for speedtrap (SPTP)"""
+
     _fields_ = [("vehicleIdx", ctypes.c_uint8), ("speed", ctypes.c_float)]
 
 
 class TeamMateInPitsData(PackedLittleEndianStructure):
+    """Event data for teammate in pits (TMPT)"""
+
     _fields_ = [
         ("vehicleIdx", ctypes.c_uint8),
     ]
 
 
 class EventDataDetails(ctypes.Union):
+    """Union for the different event data types"""
+
     _fields_ = [
         ("fastestLap", FastestLapData),
         ("penalty", PenaltyData),
@@ -793,7 +807,7 @@ HeaderFieldsToPacketType = {
 
 
 class UnpackError(Exception):
-    pass
+    """Exception for packets that cannot be unpacked"""
 
 
 def unpack_udp_packet(packet: bytes) -> PackedLittleEndianStructure:
