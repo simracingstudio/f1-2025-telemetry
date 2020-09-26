@@ -9,7 +9,7 @@ It also provides :ref:`command line tools <command_line_tools>` to record, playb
 Project information
 -------------------
 
-The *f1-2020-telemetry* package and its documentation are currently at version **0.2.0**.
+The *f1-2020-telemetry* package and its documentation are currently at version **0.2.1**.
 
 The project is distributed as a standard *wheel* package on PyPI.
 This allows installation using the standard Python 3 *pip* tool as follows:
