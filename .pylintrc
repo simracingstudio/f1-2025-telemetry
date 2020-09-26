@@ -1,13 +1,7 @@
 [MASTER]
-disable=bad-continuation,
-    invalid-name,
+disable=invalid-name,
     line-too-long,
     too-many-arguments,
-    too-many-branches,
-    too-many-instance-attributes,
-    too-many-locals,
-    no-name-in-module,
-    no-self-use,
     too-few-public-methods
 
 ignore=.git,
