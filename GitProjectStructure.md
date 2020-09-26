@@ -1,9 +1,7 @@
-=====================
 Git Project Structure
 =====================
 
 Description of the top-level Git project files and directories
---------------------------------------------------------------
 
 | name               | description                                               |
 | ------------------ | --------------------------------------------------------- |
