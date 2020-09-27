@@ -2,6 +2,7 @@
 Test packet sizes
 """
 import ctypes
+
 from f1_2020_telemetry.packets import (
     PacketCarSetupData_V1,
     PacketCarStatusData_V1,

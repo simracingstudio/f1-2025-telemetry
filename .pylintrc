@@ -2,7 +2,8 @@
 disable=invalid-name,
     line-too-long,
     too-many-arguments,
-    too-few-public-methods
+    too-few-public-methods,
+    wrong-import-order
 
 ignore=.git,
     conf.py,

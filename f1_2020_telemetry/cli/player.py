@@ -2,17 +2,17 @@
 
 """This script reads F1 2019 telemetry packets stored in a SQLite3 database file and sends them out over UDP, effectively replaying a session of the F1 2019 game."""
 
-import sys
-import logging
-import threading
 import argparse
-import time
-import sqlite3
-import socket
+import logging
 import selectors
+import socket
+import sqlite3
+import sys
+import threading
+import time
 
-from .threading_utils import WaitConsoleThread, Barrier
 from ..packets import HeaderFieldsToPacketType
+from .threading_utils import Barrier, WaitConsoleThread
 
 
 class PacketPlaybackThread(threading.Thread):

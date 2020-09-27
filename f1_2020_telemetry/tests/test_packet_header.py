@@ -2,6 +2,7 @@
 Test packet header size and features
 """
 import ctypes
+
 from f1_2020_telemetry.packets import PacketHeader
 
 

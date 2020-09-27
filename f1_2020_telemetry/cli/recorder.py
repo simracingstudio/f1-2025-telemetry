@@ -38,24 +38,23 @@ dropping UDP packets. This risk is real because SQLite3 database commits can tak
 """
 
 import argparse
-import sys
-import time
+import ctypes
+import logging
+import selectors
 import socket
 import sqlite3
+import sys
 import threading
-import logging
-import ctypes
-import selectors
-
+import time
 from collections import namedtuple
 
-from .threading_utils import WaitConsoleThread, Barrier
 from ..packets import (
+    HeaderFieldsToPacketType,
     PacketHeader,
     PacketID,
-    HeaderFieldsToPacketType,
     unpack_udp_packet,
 )
+from .threading_utils import Barrier, WaitConsoleThread
 
 # The type used by the PacketReceiverThread to represent incoming telemetry packets, with timestamp.
 TimestampedPacket = namedtuple("TimestampedPacket", "timestamp, packet")

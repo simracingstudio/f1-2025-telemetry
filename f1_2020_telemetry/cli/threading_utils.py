@@ -1,10 +1,10 @@
 """Implements some useful threading utilities for use in the command line tools."""
 
-import sys
-import threading
+import logging
 import selectors
 import socket
-import logging
+import sys
+import threading
 
 
 class Barrier:

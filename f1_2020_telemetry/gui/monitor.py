@@ -1,22 +1,21 @@
 #! /usr/bin/env python3
 
-import time
 import sys
+import time
+from collections import Counter, namedtuple
 
-from collections import namedtuple, Counter
-
-from PyQt5.QtCore import QObject, pyqtSignal, QAbstractListModel, QVariant, Qt
+from PyQt5.QtCore import QAbstractListModel, QObject, Qt, QVariant, pyqtSignal
+from PyQt5.QtNetwork import QAbstractSocket, QUdpSocket
 from PyQt5.QtWidgets import (
     QApplication,
-    QMainWindow,
-    QWidget,
     QHBoxLayout,
     QLabel,
     QListView,
+    QMainWindow,
+    QWidget,
 )
-from PyQt5.QtNetwork import QAbstractSocket, QUdpSocket
 
-from f1_2020_telemetry.packets import PacketID, unpack_udp_packet, UnpackError
+from f1_2020_telemetry.packets import PacketID, UnpackError, unpack_udp_packet
 
 IncomingPacket = namedtuple(
     "IncomingPacket", "timestamp, recv_port, src_address, src_port, packet"

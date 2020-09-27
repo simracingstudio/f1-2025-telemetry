@@ -3,15 +3,15 @@
 """This script monitors a UDP port for F1 2019 telemetry packets and prints useful info upon reception."""
 
 import argparse
-import sys
-import socket
-import threading
 import logging
-import selectors
 import math
+import selectors
+import socket
+import sys
+import threading
 
-from .threading_utils import WaitConsoleThread, Barrier
 from ..packets import PacketID, unpack_udp_packet
+from .threading_utils import Barrier, WaitConsoleThread
 
 
 class PacketMonitorThread(threading.Thread):

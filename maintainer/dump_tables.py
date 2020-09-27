@@ -2,16 +2,16 @@
 
 """This script dumps the F1 2020 telemetry tables in ReST or MarkDown format."""
 
+import argparse
 import os
 import sys
-import argparse
 
 # Make sure we import from the f1_2020_telemetry package inside the repository.
 sys.path.insert(
     0, os.path.abspath(os.path.join(os.path.dirname(sys.argv[0]), ".."))
 )
 
-from f1_2020_telemetry.packets import PacketID, EventStringCode
+from f1_2020_telemetry.packets import EventStringCode, PacketID
 from f1_2020_telemetry.types import (
     ButtonFlag,
     DriverIDs,
