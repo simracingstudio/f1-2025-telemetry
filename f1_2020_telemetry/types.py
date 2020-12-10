@@ -355,6 +355,17 @@ TeamIDs = {
     63: "Ferrari 1990",
     64: "McLaren 2010",
     65: "Ferrari 2010",
+    70: "ART Grand Prix",
+    71: "Campos Racing",
+    72: "Carlin",
+    73: "Charouz Racing System",
+    74: "DAMS",
+    75: "UNI-Virtuosi Racing",
+    76: "MP Motorsport",
+    77: "PREMA Racing",
+    78: "Trident",
+    79: "BWT HWA Racelab",
+    80: "Hitech Grand Prix",
     255: "My Team",
 }
 
