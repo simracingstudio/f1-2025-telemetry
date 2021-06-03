@@ -355,6 +355,8 @@ This packet gives details of events that happen during the course of a session.
        {
            uint8_t vehicleIdx; // Vehicle index of the vehicle triggering speed trap
            float speed;        // Top speed achieved in kilometres per hour
+           uint8_t overallFastestInSession; // Overall fastest speed in session if 1, otherwise 0
+           uint8_t driverFastestInSession; // Fastest speed for driver in session if 1, otherwise 0
        } SpeedTrap;
    };
 

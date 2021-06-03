@@ -355,7 +355,12 @@ class RetirementData(PackedLittleEndianStructure):
 class SpeedTrapData(PackedLittleEndianStructure):
     """Event data for speedtrap (SPTP)"""
 
-    _fields_ = [("vehicleIdx", ctypes.c_uint8), ("speed", ctypes.c_float)]
+    _fields_ = [
+        ("vehicleIdx", ctypes.c_uint8),
+        ("speed", ctypes.c_float),
+        ("overallFastestInSession", ctypes.c_uint8),
+        ("driverFastestInSession", ctypes.c_uint8),
+    ]
 
 
 class TeamMateInPitsData(PackedLittleEndianStructure):
