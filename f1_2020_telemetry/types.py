@@ -127,6 +127,17 @@ DriverIDs = {
     87: "Anthoine Hubert",
     88: "Giuliano Alesi",
     89: "Ralph Boschung",
+    91: "Dan Ticktum",
+    92: "Marcus Armstrong",
+    93: "Christian Lundgaard",
+    94: "Yuki Tsunoda",
+    95: "Jehan Daruvala",
+    96: "Guilherme Samaia",
+    97: "Pedro Piquet",
+    98: "Felipe Drugovich",
+    99: "Robert Shwartzman",
+    100: "Roy Nissany",
+    101: "Marino Satō",
 }
 
 InfringementTypes = {
