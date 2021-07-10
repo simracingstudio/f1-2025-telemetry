@@ -16,7 +16,7 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtNetwork import QAbstractSocket, QUdpSocket
 
-from f1_2020_telemetry.packets import PacketID, unpack_udp_packet, UnpackError
+from f1_2021_telemetry.packets import PacketID, unpack_udp_packet, UnpackError
 
 IncomingPacket = namedtuple(
     "IncomingPacket", "timestamp, recv_port, src_address, src_port, packet"

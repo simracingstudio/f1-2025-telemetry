@@ -83,9 +83,9 @@ f1-2020-telemetry-recorder script
 
 .. code-block:: console
 
-   usage: f1-2020-telemetry-recorder [-h] [-p PORT] [-i INTERVAL]
+   usage: f1-2021-telemetry-recorder [-h] [-p PORT] [-i INTERVAL]
 
-   Record F1 2020 telemetry data to SQLite3 files.
+   Record F1 2021 telemetry data to SQLite3 files.
 
    optional arguments:
      -h, --help                          show this help message and exit
@@ -93,14 +93,14 @@ f1-2020-telemetry-recorder script
      -i INTERVAL, --interval INTERVAL    interval for writing incoming data to SQLite3 file, in seconds (default: 1.0)
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-f1-2020-telemetry-player script
+f1-2021-telemetry-player script
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: console
 
-   usage: f1-2020-telemetry-player [-h] [-r REALTIME_FACTOR] [-d DESTINATION] [-p PORT] filename
+   usage: f1-2021-telemetry-player [-h] [-r REALTIME_FACTOR] [-d DESTINATION] [-p PORT] filename
 
-   Replay an F1 2020 session as UDP packets.
+   Replay an F1 2021 session as UDP packets.
 
    positional arguments:
      filename                                     SQLite3 file to replay packets from
@@ -112,12 +112,12 @@ f1-2020-telemetry-player script
      -p PORT, --port PORT                         destination UDP port (default: 20777)
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-f1-2020-telemetry-monitor script
+f1-2021-telemetry-monitor script
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: console
 
-   usage: f1-2020-telemetry-monitor [-h] [-p PORT]
+   usage: f1-2021-telemetry-monitor [-h] [-p PORT]
 
    Monitor UDP port for incoming F1 2020 telemetry data and print information.
 

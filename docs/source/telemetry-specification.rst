@@ -1,7 +1,7 @@
 .. _telemetry-specification:
 
 ======================================
-F1 2020 Telemetry Packet Specification
+F1 2021 Telemetry Packet Specification
 ======================================
 
 .. note::
@@ -81,7 +81,7 @@ Each packet has the following header:
 
    struct PacketHeader
    {
-       uint16_t  m_packetFormat;            // 2020
+       uint16_t  m_packetFormat;            // 2021
        uint8_t   m_gameMajorVersion;        // Game major version - "X.00"
        uint8_t   m_gameMinorVersion;        // Game minor version - "1.XX"
        uint8_t   m_packetVersion;           // Version of this packet type, all start from 1

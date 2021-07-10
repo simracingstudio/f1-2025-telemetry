@@ -27,9 +27,9 @@ setup(
     packages=packages,
     entry_points={
         "console_scripts": [
-            "f1-2020-telemetry-recorder=f1_2021_telemetry.cli.recorder:main",
-            "f1-2020-telemetry-player=f1_2021_telemetry.cli.player:main",
-            "f1-2020-telemetry-monitor=f1_2021_telemetry.cli.monitor:main",
+            "f1-2021-telemetry-recorder=f1_2021_telemetry.cli.recorder:main",
+            "f1-2021-telemetry-player=f1_2021_telemetry.cli.player:main",
+            "f1-2021-telemetry-monitor=f1_2021_telemetry.cli.monitor:main",
         ]
     },
     classifiers=[
