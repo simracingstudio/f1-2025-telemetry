@@ -12,17 +12,17 @@ with open("README.md") as fi:
 packages = find_packages()
 
 setup(
-    name="f1-2020-telemetry",
-    version="0.2.1",
+    name="f1-2021-telemetry",
+    version="0.0.1",
     author="Guillaume Parent",
     author_email="gp@gparent.net",
-    description="A package to handle UDP telemetry data as sent by the F1 2020 game.",
+    description="A package to handle UDP telemetry data as sent by the F1 2021 game.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://pypi.org/project/f1-2020-telemetry/",
+    url="https://pypi.org/project/f1-2021-telemetry/",
     project_urls={
-        "Documentation": "https://f1-2020-telemetry.readthedocs.io/en/latest/",
-        "Source Repository": "https://gitlab.com/gparent/f1-2020-telemetry/",
+        "Documentation": "https://f1-2021-telemetry.readthedocs.io/en/latest/",
+        "Source Repository": "https://gitlab.com/simracingstudio/f1-2021-telemetry",
     },
     packages=packages,
     entry_points={
