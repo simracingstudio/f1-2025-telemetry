@@ -93,6 +93,8 @@ class PacketID(enum.IntEnum):
     CAR_STATUS = 7
     FINAL_CLASSIFICATION = 8
     LOBBY_INFO = 9
+    CAR_DAMAGE = 10
+    SESSION_HISTORY = 11
 
     long_description: Dict[enum.IntEnum, str]
     short_description: Dict[enum.IntEnum, str]
@@ -109,6 +111,9 @@ PacketID.short_description = {
     PacketID.CAR_STATUS: "Car Status",
     PacketID.FINAL_CLASSIFICATION: "Final Classification",
     PacketID.LOBBY_INFO: "Lobby information",
+    PacketID.CAR_DAMAGE: "Car Damage",
+    PacketID.SESSION_HISTORY: "Session History",
+
 }
 
 
@@ -123,6 +128,8 @@ PacketID.long_description = {
     PacketID.CAR_STATUS: "Status data for all cars such as damage",
     PacketID.FINAL_CLASSIFICATION: "Final classification confirmation at the end of a race",
     PacketID.LOBBY_INFO: "Information about players in a multiplayer lobby",
+    PacketID.CAR_DAMAGE: "Damage Status for all cars",
+    PacketID.SESSION_HISTORY: "Lap and tyre data for session",
 }
 
 #########################################################
@@ -213,7 +220,10 @@ class WeatherForecastSample(PackedLittleEndianStructure):
         ("timeOffset", ctypes.c_uint8),
         ("weather", ctypes.c_uint8),
         ("trackTemperature", ctypes.c_int8),
+        ("trackTemperatureChange", ctypes.c_int8),
         ("airTemperature", ctypes.c_int8),
+        ("airTemperatureChange", ctypes.c_int8),
+        ("rainPercentage", ctypes.c_uint8),
     ]
 
 
@@ -221,7 +231,7 @@ class PacketSessionData_V1(PackedLittleEndianStructure):
     """The session packet includes details about the current session in progress.
 
     Frequency: 2 per second
-    Size: 251 bytes
+    Size: 625 bytes
     Version: 1
     """
 
@@ -247,7 +257,25 @@ class PacketSessionData_V1(PackedLittleEndianStructure):
         ("safetyCarStatus", ctypes.c_uint8),
         ("networkGame", ctypes.c_uint8),
         ("numWeatherForecastSamples", ctypes.c_uint8),
-        ("weatherForecastSamples", WeatherForecastSample * 20),
+        ("weatherForecastSamples", WeatherForecastSample * 56),
+        ("forecastAccuracy", ctypes.c_uint8),
+        ("aiDifficulty", ctypes.c_uint8),
+        ("seasonLinkIdentifier", ctypes.c_uint32),
+        ("weekendLinkIdentifier", ctypes.c_uint32),
+        ("sessionLinkIdentifier", ctypes.c_uint32),
+        ("pitStopWindowIdealLap", ctypes.c_uint8),
+        ("pitStopWindowLatestLap", ctypes.c_uint8),
+        ("pitStopRejoinPosition", ctypes.c_uint8),
+        ("steeringAssist", ctypes.c_uint8),
+        ("brakingAssist", ctypes.c_uint8),
+        ("gearBoxAssist", ctypes.c_uint8),
+        ("pitAssist", ctypes.c_uint8),
+        ("pitReleaseAssist", ctypes.c_uint8),
+        ("ERSAssist", ctypes.c_uint8),
+        ("DRSAssist", ctypes.c_uint8),
+        ("dynamicRacingLine", ctypes.c_uint8),
+        ("dynamicRacingLineType", ctypes.c_uint8),
+
     ]
 
 
@@ -262,33 +290,31 @@ class LapData_V1(PackedLittleEndianStructure):
     """This type is used for the 22-element 'lapData' array of the PacketLapData_V1 type, defined below."""
 
     _fields_ = [
-        ("lastLapTime", ctypes.c_float),
-        ("currentLapTime", ctypes.c_float),
+        ("lastLapTimeInMS", ctypes.c_uint32),
+        ("currentLapTimeinMS", ctypes.c_uint32),
         ("sector1TimeInMS", ctypes.c_uint16),
         ("sector2TimeInMS", ctypes.c_uint16),
-        ("bestLapTime", ctypes.c_float),
-        ("bestLapNum", ctypes.c_uint8),
-        ("bestLapSector1TimeInMS", ctypes.c_uint16),
-        ("bestLapSector2TimeInMS", ctypes.c_uint16),
-        ("bestLapSector3TimeInMS", ctypes.c_uint16),
-        ("bestOverallSector1TimeInMS", ctypes.c_uint16),
-        ("bestOverallSector1LapNum", ctypes.c_uint8),
-        ("bestOverallSector2TimeInMS", ctypes.c_uint16),
-        ("bestOverallSector2LapNum", ctypes.c_uint8),
-        ("bestOverallSector3TimeInMS", ctypes.c_uint16),
-        ("bestOverallSector3LapNum", ctypes.c_uint8),
         ("lapDistance", ctypes.c_float),
         ("totalDistance", ctypes.c_float),
         ("safetyCarDelta", ctypes.c_float),
         ("carPosition", ctypes.c_uint8),
         ("currentLapNum", ctypes.c_uint8),
         ("pitStatus", ctypes.c_uint8),
+        ("numPitStops", ctypes.c_uint8),
         ("sector", ctypes.c_uint8),
         ("currentLapInvalid", ctypes.c_uint8),
         ("penalties", ctypes.c_uint8),
+        ("warnings", ctypes.c_uint8),
+        ("numUnservedDriveThroughPens", ctypes.c_uint8),
+        ("numUnservedStopGoPens", ctypes.c_uint8),
         ("gridPosition", ctypes.c_uint8),
         ("driverStatus", ctypes.c_uint8),
         ("resultStatus", ctypes.c_uint8),
+        ("pitLaneTimerActive", ctypes.c_uint8),
+        ("pitLaneTimeinLaneinMS", ctypes.c_uint16),
+        ("pitStopTimerinMS", ctypes.c_uint16),
+        ("pitStopShouldServePen", ctypes.c_uint8),
+
     ]
 
 
@@ -296,7 +322,7 @@ class PacketLapData_V1(PackedLittleEndianStructure):
     """The lap data packet gives details of all the cars in the session.
 
     Frequency: Rate as specified in menus
-    Size: 1190 bytes
+    Size: 970 bytes
     Version: 1
     """
 
@@ -355,7 +381,11 @@ class RetirementData(PackedLittleEndianStructure):
 class SpeedTrapData(PackedLittleEndianStructure):
     """Event data for speedtrap (SPTP)"""
 
-    _fields_ = [("vehicleIdx", ctypes.c_uint8), ("speed", ctypes.c_float)]
+    _fields_ = [("vehicleIdx", ctypes.c_uint8),
+                ("speed", ctypes.c_float),
+                ("overallFastestInSession", ctypes.c_uint8),
+                ("driverFastestInSession", ctypes.c_uint8),
+                ]
 
 
 class TeamMateInPitsData(PackedLittleEndianStructure):
@@ -365,17 +395,53 @@ class TeamMateInPitsData(PackedLittleEndianStructure):
         ("vehicleIdx", ctypes.c_uint8),
     ]
 
+class StartLights(PackedLittleEndianStructure):
+
+    _fields_ = [
+        ("numLights", ctypes.c_uint8),
+    ]
+
+class DriveThroughPenaltyServed(PackedLittleEndianStructure):
+
+    _fields_ = [
+        ("vehicleIdx", ctypes.c_uint8),
+    ]
+
+class StopGoPenaltyServed(PackedLittleEndianStructure):
+
+    _fields_ = [
+        ("vehicleIdx", ctypes.c_uint8),
+    ]
+
+class Flashback(PackedLittleEndianStructure):
+
+    _fields_ = [
+        ("flashbackFrameIdentifier", ctypes.c_uint32),
+        ("flashbackSessionTime", ctypes.c_float),
+    ]
+
+class Buttons(PackedLittleEndianStructure):
+
+    _fields_ = [
+        ("buttonStatus", ctypes.c_uint32),
+    ]
 
 class EventDataDetails(ctypes.Union):
     """Union for the different event data types"""
 
     _fields_ = [
         ("fastestLap", FastestLapData),
-        ("penalty", PenaltyData),
-        ("raceWinner", RaceWinnerData),
         ("retirement", RetirementData),
-        ("speedTrap", SpeedTrapData),
         ("teamMateInPits", TeamMateInPitsData),
+        ("raceWinner", RaceWinnerData),
+        ("penalty", PenaltyData),
+        ("speedTrap", SpeedTrapData),
+        ("startLights", StartLights),
+        ("driveThroughPenaltyServer", DriveThroughPenaltyServed),
+        ("stopGoPenaltyServed", StopGoPenaltyServed),
+        ("flashback", Flashback),
+        ("buttons", Buttons),
+
     ]
 
 
@@ -383,7 +449,7 @@ class PacketEventData_V1(PackedLittleEndianStructure):
     """This packet gives details of events that happen during the course of a session.
 
     Frequency: When the event occurs
-    Size: 35 bytes
+    Size: 36 bytes
     Version: 1
     """
 
@@ -399,7 +465,7 @@ class PacketEventData_V1(PackedLittleEndianStructure):
     def __repr__(self):
         event = self.eventStringCode.decode()
 
-        if event in ["CHQF", "DRSD", "DRSE", "SEND", "SSTA"]:
+        if event in ["CHQF", "DRSD", "DRSE", "SEND", "SSTA", "lgot"]:
             end = ")"
         else:
             if event == "FTLP":
@@ -414,6 +480,16 @@ class PacketEventData_V1(PackedLittleEndianStructure):
                 event_details = self.eventDetails.speedTrap
             elif event == "TMPT":
                 event_details = self.eventDetails.teamMateInPits
+            elif event == "BUTN":
+                event_details = self.eventDetails.buttons
+            elif event == "FLBK":
+                event_details = self.eventDetails.flashback
+            elif event == "SGSV":
+                event_details = self.eventDetails.stopGoPenaltyServed
+            elif event == "DTSV":
+                event_details = self.eventDetails.driveThroughPenaltyServer
+            elif event == "STLG":
+                event_details = self.eventDetails.startLights
             else:
                 raise RuntimeError(f"Bad event code {event}")
 
@@ -440,6 +516,14 @@ class EventStringCode(enum.Enum):
     PENA = b"PENA"
     SPTP = b"SPTP"
 
+    STLG = b"STLG"
+    LGOT = b"LGOT"
+    DTSV = b"DTSV"
+    SGSV = b"SGSV"
+    FLBK = b"FLBK"
+    BUTN = b"BUTN"
+
+
     long_description: Dict[enum.Enum, str]
     short_description: Dict[enum.Enum, str]
 
@@ -456,6 +540,12 @@ EventStringCode.short_description = {
     EventStringCode.RCWN: "Race Winner",
     EventStringCode.PENA: "Penalty issued",
     EventStringCode.SPTP: "Speed trap triggered",
+    EventStringCode.STLG: "Start Lights",
+    EventStringCode.LGOT: "Lights Out",
+    EventStringCode.DTSV: "Drive through served",
+    EventStringCode.SGSV: "Stop go served",
+    EventStringCode.FLBK: "Flashback",
+    EventStringCode.BUTN: "Button status",
 }
 
 
@@ -471,6 +561,13 @@ EventStringCode.long_description = {
     EventStringCode.RCWN: "The race winner is announced",
     EventStringCode.PENA: "A penalty has been issued",
     EventStringCode.SPTP: "Speed trap has been triggered",
+    EventStringCode.STLG: "Start Lights - number shown",
+    EventStringCode.LGOT: "Lights out",
+    EventStringCode.DTSV: "Drive through penalty served",
+    EventStringCode.SGSV: "Stop go penalty served",
+    EventStringCode.FLBK: "Flashback activated",
+    EventStringCode.BUTN: "Button status changed",
+
 }
 
 ###############################################################
@@ -486,7 +583,9 @@ class ParticipantData_V1(PackedLittleEndianStructure):
     _fields_ = [
         ("aiControlled", ctypes.c_uint8),
         ("driverId", ctypes.c_uint8),
+        ("networkId", ctypes.c_uint8),
         ("teamId", ctypes.c_uint8),
+        ("myTeam", ctypes.c_uint8),
         ("raceNumber", ctypes.c_uint8),
         ("nationality", ctypes.c_uint8),
         ("name", ctypes.c_char * 48),
@@ -503,7 +602,7 @@ class PacketParticipantsData_V1(PackedLittleEndianStructure):
     otherwise it will be the driver name.
 
     Frequency: Every 5 seconds
-    Size: 1213 bytes
+    Size: 1257 bytes
     Version: 1
     """
 
@@ -582,7 +681,8 @@ class CarTelemetryData_V1(PackedLittleEndianStructure):
         ("gear", ctypes.c_int8),
         ("engineRPM", ctypes.c_uint16),
         ("drs", ctypes.c_uint8),
-        ("revLightsPercent", ctypes.c_uint8),
+        ("revLightsPercent", ctypes.c_uint16),
+        ("revLightsBitValue", ctypes.c_uint16),
         ("brakesTemperature", ctypes.c_uint16 * 4),
         ("tyresSurfaceTemperature", ctypes.c_uint8 * 4),
         ("tyresInnerTemperature", ctypes.c_uint8 * 4),
@@ -598,14 +698,13 @@ class PacketCarTelemetryData_V1(PackedLittleEndianStructure):
     It details various values that would be recorded on the car such as speed, throttle application, DRS etc.
 
     Frequency: Rate as specified in menus
-    Size: 1307 bytes
+    Size: 1347 bytes
     Version: 1
     """
 
     _fields_ = [
         ("header", PacketHeader),
         ("carTelemetryData", CarTelemetryData_V1 * 22),
-        ("buttonStatus", ctypes.c_uint32),
         ("mfdPanelIndex", ctypes.c_uint8),
         ("mfdPanelIndexSecondaryPlayer", ctypes.c_uint8),
         ("suggestedGear", ctypes.c_int8),
@@ -666,23 +765,16 @@ class CarStatusData_V1(PackedLittleEndianStructure):
         ("maxGears", ctypes.c_uint8),
         ("drsAllowed", ctypes.c_uint8),
         ("drsActivationDistance", ctypes.c_uint16),
-        ("tyresWear", ctypes.c_uint8 * 4),
         ("actualTyreCompound", ctypes.c_uint8),
         ("visualTyreCompound", ctypes.c_uint8),
         ("tyresAgeLaps", ctypes.c_uint8),
-        ("tyresDamage", ctypes.c_uint8 * 4),
-        ("frontLeftWingDamage", ctypes.c_uint8),
-        ("frontRightWingDamage", ctypes.c_uint8),
-        ("rearWingDamage", ctypes.c_uint8),
-        ("drsFault", ctypes.c_uint8),
-        ("engineDamage", ctypes.c_uint8),
-        ("gearBoxDamage", ctypes.c_uint8),
         ("vehicleFiaFlags", ctypes.c_int8),
         ("ersStoreEnergy", ctypes.c_float),
         ("ersDeployMode", ctypes.c_uint8),
         ("ersHarvestedThisLapMGUK", ctypes.c_float),
         ("ersHarvestedThisLapMGUH", ctypes.c_float),
         ("ersDeployedThisLap", ctypes.c_float),
+        ("networkPaused", ctypes.c_uint8),
     ]
 
 
@@ -766,6 +858,7 @@ class LobbyInfoData_V1(PackedLittleEndianStructure):
         ("teamId", ctypes.c_uint8),
         ("nationality", ctypes.c_uint8),
         ("name", ctypes.c_char * 48),
+        ("carNumber", ctypes.c_uint8),
         ("readyStatus", ctypes.c_uint8),
     ]
 
@@ -774,7 +867,7 @@ class PacketLobbyInfoData_V1(PackedLittleEndianStructure):
     """This is a list of players in a multiplayer lobby.
 
     Frequency: Two every second when in the lobby
-    Size: 1169 bytes
+    Size: 1191 bytes
     Version: 1
     """
 
@@ -782,6 +875,97 @@ class PacketLobbyInfoData_V1(PackedLittleEndianStructure):
         ("header", PacketHeader),  # Header
         ("numPlayers", ctypes.c_uint8),
         ("lobbyPlayers", LobbyInfoData_V1 * 22),
+    ]
+
+###############################################################
+#                                                             #
+#  ___________  Packet ID 10 : CAR DAMAGE PACKET  ___________  #
+#                                                             #
+###############################################################
+
+
+class CarDamageData_V1(PackedLittleEndianStructure):
+    """This packet details car damage parameters for all the cars in the race"""
+
+    _fields_ = [
+        ("tyresWear", ctypes.c_uint8 * 4),
+        ("tyresDamage", ctypes.c_uint8 * 4),
+        ("brakesDamage", ctypes.c_uint8 * 4),
+        ("frontLeftWingDamage", ctypes.c_uint8),
+        ("frontRightWingDamage", ctypes.c_uint8),
+        ("rearWingDamage", ctypes.c_uint8),
+        ("floorDamage", ctypes.c_uint8),
+        ("diffuserDamage", ctypes.c_uint8),
+        ("sidepodDamage", ctypes.c_uint8),
+        ("drsFault", ctypes.c_uint8),
+        ("gearBoxDamage", ctypes.c_uint8),
+        ("engineDamage", ctypes.c_uint8),
+        ("engineMGUHWear", ctypes.c_uint8),
+        ("engineESWear", ctypes.c_uint8),
+        ("engineCEWear", ctypes.c_uint8),
+        ("engineICEWear", ctypes.c_uint8),
+        ("engineMGUKWear", ctypes.c_uint8),
+        ("engineTCWear", ctypes.c_uint8),
+    ]
+
+
+class PacketCarDamageData_V1(PackedLittleEndianStructure):
+    """This is a list of players in a multiplayer lobby.
+
+    Frequency: Two every second when in the lobby
+    Size: 882 bytes
+    Version: 1
+    """
+
+    _fields_ = [
+        ("header", PacketHeader),  # Header
+        ("carDamageData", CarDamageData_V1 * 22),
+    ]
+
+
+###############################################################
+#                                                             #
+#  ___________  Packet ID 11 : SESSION HISTORY PACKET  _____  #
+#                                                             #
+###############################################################
+
+
+class LapHistoryData_V1(PackedLittleEndianStructure):
+    """This packet contains lap times and tyre usage for the session"""
+
+    _fields_ = [
+        ("lapTimeInMS", ctypes.c_uint32),
+        ("sector1TimeInMS", ctypes.c_uint16),
+        ("sector2TimeInMS", ctypes.c_uint16),
+        ("sector3TimeInMS", ctypes.c_uint16),
+        ("lapValidBitFlags", ctypes.c_uint8),
+    ]
+
+class TyreStintHistoryData_V1(PackedLittleEndianStructure):
+
+    _fields_ = [
+        ("endLap", ctypes.c_uint8),
+        ("tyreActualCompound", ctypes.c_uint8),
+        ("tyreVisualCompound", ctypes.c_uint8),
+    ]
+
+class PacketSessionHistoryData_V1(PackedLittleEndianStructure):
+    """
+    Size: 1155 bytes
+    Version: 1
+    """
+
+    _fields_ = [
+        ("header", PacketHeader),  # Header
+		("carIdx", ctypes.c_uint8),
+		("numLaps", ctypes.c_uint8),
+		("numTyreStints", ctypes.c_uint8),
+		("bestLapTimeLapNum", ctypes.c_uint8),
+		("bestSector1LapNum", ctypes.c_uint8),
+		("bestSector2LapNum", ctypes.c_uint8),
+		("bestSector3LapNum", ctypes.c_uint8),
+		("lapHistoryData", LapHistoryData_V1 * 100),
+		("tyreStintHistoryData", TyreStintHistoryData_V1 * 8),
     ]
 
 
@@ -793,18 +977,20 @@ class PacketLobbyInfoData_V1(PackedLittleEndianStructure):
 
 # Map from (packetFormat, packetVersion, packetId) to a specific packet type.
 HeaderFieldsToPacketType = {
-    (2020, 1, 0): PacketMotionData_V1,
-    (2020, 1, 1): PacketSessionData_V1,
-    (2020, 1, 2): PacketLapData_V1,
-    (2020, 1, 3): PacketEventData_V1,
-    (2020, 1, 4): PacketParticipantsData_V1,
-    (2020, 1, 5): PacketCarSetupData_V1,
-    (2020, 1, 6): PacketCarTelemetryData_V1,
-    (2020, 1, 7): PacketCarStatusData_V1,
-    (2020, 1, 8): PacketFinalClassificationData_V1,
-    (2020, 1, 9): PacketLobbyInfoData_V1,
-}
+    (2021, 1, 0): PacketMotionData_V1,
+    (2021, 1, 1): PacketSessionData_V1,
+    (2021, 1, 2): PacketLapData_V1,
+    (2021, 1, 3): PacketEventData_V1,
+    (2021, 1, 4): PacketParticipantsData_V1,
+    (2021, 1, 5): PacketCarSetupData_V1,
+    (2021, 1, 6): PacketCarTelemetryData_V1,
+    (2021, 1, 7): PacketCarStatusData_V1,
+    (2021, 1, 8): PacketFinalClassificationData_V1,
+    (2021, 1, 9): PacketLobbyInfoData_V1,
+    (2021, 1, 10): PacketCarDamageData_V1,
+    (2021, 1, 11): PacketSessionHistoryData_V1,
 
+}
 
 class UnpackError(Exception):
     """Exception for packets that cannot be unpacked"""
