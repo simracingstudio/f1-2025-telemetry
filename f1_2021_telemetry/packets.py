@@ -681,7 +681,7 @@ class CarTelemetryData_V1(PackedLittleEndianStructure):
         ("gear", ctypes.c_int8),
         ("engineRPM", ctypes.c_uint16),
         ("drs", ctypes.c_uint8),
-        ("revLightsPercent", ctypes.c_uint16),
+        ("revLightsPercent", ctypes.c_uint8),
         ("revLightsBitValue", ctypes.c_uint16),
         ("brakesTemperature", ctypes.c_uint16 * 4),
         ("tyresSurfaceTemperature", ctypes.c_uint8 * 4),
