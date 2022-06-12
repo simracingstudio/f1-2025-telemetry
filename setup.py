@@ -26,11 +26,6 @@ setup(
     },
     packages=packages,
     entry_points={
-        "console_scripts": [
-            "f1-2022-telemetry-recorder=f1_2022_telemetry.cli.recorder:main",
-            "f1-2022-telemetry-player=f1_2022_telemetry.cli.player:main",
-            "f1-2022-telemetry-monitor=f1_2022_telemetry.cli.monitor:main",
-        ]
     },
     classifiers=[
         "Programming Language :: Python :: 3",
