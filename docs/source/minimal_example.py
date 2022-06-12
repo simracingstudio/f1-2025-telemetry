@@ -3,7 +3,7 @@ Listen to telemetry packets and print them to standard output
 """
 import socket
 
-from f1_2021_telemetry.packets import unpack_udp_packet
+from f1_2022_telemetry.packets import unpack_udp_packet
 
 udp_socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 udp_socket.bind(("", 20777))

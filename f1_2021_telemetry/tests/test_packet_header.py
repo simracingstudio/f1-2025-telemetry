@@ -2,7 +2,7 @@
 Test packet header size and features
 """
 import ctypes
-from f1_2021_telemetry.packets import PacketHeader
+from f1_2022_telemetry.packets import PacketHeader
 
 
 def test_packet_header_109():
@@ -11,7 +11,7 @@ def test_packet_header_109():
     data = b"\xe4\x07\x01\t\x01\x03\xa3\x80\x9atC\xc0\x8e}:\x11\tD\xab\\\x00\x00\xff\xffPENA\x05\x07\x04\xff\xff\x05\x00"
     header = PacketHeader.from_buffer_copy(data)
 
-    assert header.packetFormat == 2021
+    assert header.packetFormat == 2022
     assert header.gameMajorVersion == 1
     assert header.gameMinorVersion == 9
 
@@ -26,7 +26,7 @@ def test_packet_header():
 
     assert ctypes.sizeof(header) == expected_header_size
 
-    assert header.packetFormat == 2021
+    assert header.packetFormat == 2022
     assert header.gameMajorVersion == 1
     assert header.gameMinorVersion == 8
     assert header.packetVersion == 1

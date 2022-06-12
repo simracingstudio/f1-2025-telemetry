@@ -12,24 +12,24 @@ with open("README.md") as fi:
 packages = find_packages()
 
 setup(
-    name="f1-2021-telemetry",
+    name="f1-2022-telemetry",
     version="0.0.1",
     author="Guillaume Parent",
     author_email="gp@gparent.net",
-    description="A package to handle UDP telemetry data as sent by the F1 2021 game.",
+    description="A package to handle UDP telemetry data as sent by the F1 2022 game.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://pypi.org/project/f1-2021-telemetry/",
+    url="https://pypi.org/project/f1-2022-telemetry/",
     project_urls={
-        "Documentation": "https://f1-2021-telemetry.readthedocs.io/en/latest/",
-        "Source Repository": "https://gitlab.com/simracingstudio/f1-2021-telemetry",
+        "Documentation": "https://f1-2022-telemetry.readthedocs.io/en/latest/",
+        "Source Repository": "https://gitlab.com/simracingstudio/f1-2022-telemetry",
     },
     packages=packages,
     entry_points={
         "console_scripts": [
-            "f1-2021-telemetry-recorder=f1_2021_telemetry.cli.recorder:main",
-            "f1-2021-telemetry-player=f1_2021_telemetry.cli.player:main",
-            "f1-2021-telemetry-monitor=f1_2021_telemetry.cli.monitor:main",
+            "f1-2022-telemetry-recorder=f1_2022_telemetry.cli.recorder:main",
+            "f1-2022-telemetry-player=f1_2022_telemetry.cli.player:main",
+            "f1-2022-telemetry-monitor=f1_2022_telemetry.cli.monitor:main",
         ]
     },
     classifiers=[

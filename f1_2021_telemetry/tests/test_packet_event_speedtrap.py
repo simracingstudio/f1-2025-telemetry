@@ -1,7 +1,7 @@
 """
 Test speedtrap event packets
 """
-from f1_2021_telemetry.packets import unpack_udp_packet
+from f1_2022_telemetry.packets import unpack_udp_packet
 
 
 def is_speedtrap(event_packet):

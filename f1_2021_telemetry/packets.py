@@ -209,7 +209,8 @@ class PacketMotionData_V1(PackedLittleEndianStructure):
 class MarshalZone_V1(PackedLittleEndianStructure):
     """This type is used for the 21-element 'marshalZones' array of the PacketSessionData_V1 type, defined below."""
 
-    _fields_ = [("zoneStart", ctypes.c_float), ("zoneFlag", ctypes.c_int8)]
+    _fields_ = [("zoneStart", ctypes.c_float),
+                ("zoneFlag", ctypes.c_int8)]
 
 
 class WeatherForecastSample(PackedLittleEndianStructure):
@@ -275,7 +276,10 @@ class PacketSessionData_V1(PackedLittleEndianStructure):
         ("DRSAssist", ctypes.c_uint8),
         ("dynamicRacingLine", ctypes.c_uint8),
         ("dynamicRacingLineType", ctypes.c_uint8),
-
+        ("gameMode", ctypes.c_uint8),
+        ("ruleSet", ctypes.c_uint8),
+        ("timeOfDay", ctypes.c_uint32),
+        ("sessionLength", ctypes.c_uint8),
     ]
 
 
@@ -329,6 +333,9 @@ class PacketLapData_V1(PackedLittleEndianStructure):
     _fields_ = [
         ("header", PacketHeader),  # Header
         ("lapData", LapData_V1 * 22),  # Lap data for all cars on track
+        ("timeTrialPBCarIdx", ctypes.c_uint8),  # Lap data for all cars on track
+        ("timeTrialRivalCarIdx", ctypes.c_uint8),  # Lap data for all cars on track
+
     ]
 
 
@@ -347,6 +354,26 @@ class FastestLapData(PackedLittleEndianStructure):
         ("lapTime", ctypes.c_float),  # Lap time is in seconds
     ]
 
+class RetirementData(PackedLittleEndianStructure):
+    """Event data for retirement (RTMT)"""
+
+    _fields_ = [
+        ("vehicleIdx", ctypes.c_uint8),
+    ]
+
+class TeamMateInPitsData(PackedLittleEndianStructure):
+    """Event data for teammate in pits (TMPT)"""
+
+    _fields_ = [
+        ("vehicleIdx", ctypes.c_uint8),
+    ]
+
+class RaceWinnerData(PackedLittleEndianStructure):
+    """Event data for race winner (RCWN)"""
+
+    _fields_ = [
+        ("vehicleIdx", ctypes.c_uint8),
+    ]
 
 class PenaltyData(PackedLittleEndianStructure):
     """Event data for penalty (PENA)"""
@@ -362,22 +389,6 @@ class PenaltyData(PackedLittleEndianStructure):
     ]
 
 
-class RaceWinnerData(PackedLittleEndianStructure):
-    """Event data for race winner (RCWN)"""
-
-    _fields_ = [
-        ("vehicleIdx", ctypes.c_uint8),
-    ]
-
-
-class RetirementData(PackedLittleEndianStructure):
-    """Event data for retirement (RTMT)"""
-
-    _fields_ = [
-        ("vehicleIdx", ctypes.c_uint8),
-    ]
-
-
 class SpeedTrapData(PackedLittleEndianStructure):
     """Event data for speedtrap (SPTP)"""
 
@@ -385,15 +396,10 @@ class SpeedTrapData(PackedLittleEndianStructure):
                 ("speed", ctypes.c_float),
                 ("overallFastestInSession", ctypes.c_uint8),
                 ("driverFastestInSession", ctypes.c_uint8),
+                ("fastestVehicleIdxInSession", ctypes.c_uint8),
+                ("fastestSpeedInSession", ctypes.c_float),
                 ]
 
-
-class TeamMateInPitsData(PackedLittleEndianStructure):
-    """Event data for teammate in pits (TMPT)"""
-
-    _fields_ = [
-        ("vehicleIdx", ctypes.c_uint8),
-    ]
 
 class StartLights(PackedLittleEndianStructure):
 
@@ -659,7 +665,8 @@ class PacketCarSetupData_V1(PackedLittleEndianStructure):
     Version: 1
     """
 
-    _fields_ = [("header", PacketHeader), ("carSetups", CarSetupData_V1 * 22)]
+    _fields_ = [("header", PacketHeader),
+                ("carSetups", CarSetupData_V1 * 22)]
 
 
 ################################################################
@@ -820,6 +827,7 @@ class FinalClassificationData_V1(PackedLittleEndianStructure):
         ("numTyreStints", ctypes.c_uint8),
         ("tyreStintsActual", ctypes.c_uint8 * 8),
         ("tyreStintsVisual", ctypes.c_uint8 * 8),
+        ("tyreStintsEndLaps", ctypes.c_uint8 * 8),
     ]
 
 
@@ -835,10 +843,7 @@ class PacketFinalClassificationData_V1(PackedLittleEndianStructure):
 
     _fields_ = [
         ("header", PacketHeader),  # Header
-        (
-            "numCars",
-            ctypes.c_uint8,
-        ),  # Number of cars in the final classification
+        ("numCars", ctypes.c_uint8),  # Number of cars in the final classification
         ("classificationData", FinalClassificationData_V1 * 22),
     ]
 
@@ -906,6 +911,8 @@ class CarDamageData_V1(PackedLittleEndianStructure):
         ("engineICEWear", ctypes.c_uint8),
         ("engineMGUKWear", ctypes.c_uint8),
         ("engineTCWear", ctypes.c_uint8),
+        ("engineBlown", ctypes.c_uint8),
+        ("engineSeized", ctypes.c_uint8),
     ]
 
 
@@ -977,18 +984,18 @@ class PacketSessionHistoryData_V1(PackedLittleEndianStructure):
 
 # Map from (packetFormat, packetVersion, packetId) to a specific packet type.
 HeaderFieldsToPacketType = {
-    (2021, 1, 0): PacketMotionData_V1,
-    (2021, 1, 1): PacketSessionData_V1,
-    (2021, 1, 2): PacketLapData_V1,
-    (2021, 1, 3): PacketEventData_V1,
-    (2021, 1, 4): PacketParticipantsData_V1,
-    (2021, 1, 5): PacketCarSetupData_V1,
-    (2021, 1, 6): PacketCarTelemetryData_V1,
-    (2021, 1, 7): PacketCarStatusData_V1,
-    (2021, 1, 8): PacketFinalClassificationData_V1,
-    (2021, 1, 9): PacketLobbyInfoData_V1,
-    (2021, 1, 10): PacketCarDamageData_V1,
-    (2021, 1, 11): PacketSessionHistoryData_V1,
+    (2022, 1, 0): PacketMotionData_V1,
+    (2022, 1, 1): PacketSessionData_V1,
+    (2022, 1, 2): PacketLapData_V1,
+    (2022, 1, 3): PacketEventData_V1,
+    (2022, 1, 4): PacketParticipantsData_V1,
+    (2022, 1, 5): PacketCarSetupData_V1,
+    (2022, 1, 6): PacketCarTelemetryData_V1,
+    (2022, 1, 7): PacketCarStatusData_V1,
+    (2022, 1, 8): PacketFinalClassificationData_V1,
+    (2022, 1, 9): PacketLobbyInfoData_V1,
+    (2022, 1, 10): PacketCarDamageData_V1,
+    (2022, 1, 11): PacketSessionHistoryData_V1,
 
 }
 
