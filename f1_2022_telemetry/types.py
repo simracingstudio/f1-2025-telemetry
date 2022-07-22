@@ -346,6 +346,7 @@ TeamIDs = {
     2: "Red Bull Racing",
     3: "Williams",
     4: "Aston Martin",
+    41: "Multiplayer",
     5: "Alpine",
     85: "Mercedes 2020",
     6: "Alpha Tauri",
