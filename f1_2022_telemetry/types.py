@@ -384,17 +384,17 @@ TeamIDs = {
     115: "BWT ‘21",
     116: "Trident ‘21",
     117: "Mercedes AMG GT Black Series91Alpha Tauri 2020",
-    118: "Prema ‘22
-    119: "Virtuosi ‘22
-    120: "Carlin ‘22
-    121: "Hitech ‘22
-    122: "Art GP ‘22
-    123: "MP Motorsport ‘22
-    124: "Charouz ‘22
-    125: "Dams ‘22
-    126: "Campos ‘22
-    127: "Van Amersfoort Racing ‘22
-    128: "Trident ‘22
+    118: "Prema ‘22",
+    119: "Virtuosi ‘22",
+    120: "Carlin ‘22",
+    121: "Hitech ‘22",
+    122: "Art GP ‘22",
+    123: "MP Motorsport ‘22",
+    124: "Charouz ‘22",
+    125: "Dams ‘22",
+    126: "Campos ‘22",
+    127: "Van Amersfoort Racing ‘22",
+    128: "Trident ‘22",
     255: "My Team",
 }
 
