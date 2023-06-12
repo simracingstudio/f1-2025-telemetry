@@ -156,6 +156,10 @@ DriverIDs = {
     73: "Lukas Weber",
     74: "Antonio Giovinazzi",
     75: "Robert Kubica"
+    112: "Oscar Piastri",
+    113: "Liam Lawson",
+    114: "Juri Vips",
+
 }
 
 InfringementTypes = {
@@ -210,7 +214,14 @@ InfringementTypes = {
     48: "League grid penalty",
     49: "Retry penalty",
     50: "Illegal time gain",
-    51: "Mandatory pitstop",
+    51: "Retry penalty",
+    52: "Illegal time gain",
+    53: "Mandatory pitstop",
+    54: "Attribute assigned",
+
+
+
+
 }
 
 NationalityIDs = {
@@ -346,7 +357,6 @@ TeamIDs = {
     2: "Red Bull Racing",
     3: "Williams",
     4: "Aston Martin",
-    41: "Multiplayer",
     5: "Alpine",
     85: "Mercedes 2020",
     6: "Alpha Tauri",
@@ -383,7 +393,7 @@ TeamIDs = {
     114: "Campos ‘21",
     115: "BWT ‘21",
     116: "Trident ‘21",
-    117: "Mercedes AMG GT Black Series91Alpha Tauri 2020",
+    117: "Mercedes AMG GT Black Series",
     118: "Prema ‘22",
     119: "Virtuosi ‘22",
     120: "Carlin ‘22",
@@ -430,4 +440,6 @@ TrackIDs = {
     28: "Portimão",
     29: "Jeddah",
     30: "Miami",
+    31: "Las Vegas",
+    32: "Losail",
 }
