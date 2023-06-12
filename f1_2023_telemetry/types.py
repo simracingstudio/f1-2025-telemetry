@@ -155,7 +155,7 @@ DriverIDs = {
     38: "Klimek Michalski",
     73: "Lukas Weber",
     74: "Antonio Giovinazzi",
-    75: "Robert Kubica"
+    75: "Robert Kubica",
     112: "Oscar Piastri",
     113: "Liam Lawson",
     114: "Juri Vips",
