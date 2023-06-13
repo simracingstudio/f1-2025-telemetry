@@ -1057,11 +1057,14 @@ class PacketTyreSets_V1(PackedLittleEndianStructure):
 #                                                             #
 ###############################################################
 
-
-class MotionExData_V1(PackedLittleEndianStructure):
-    """This packet contains lap times and tyre usage for the session"""
+class PacketMotionEx_V1(PackedLittleEndianStructure):
+    """
+    Size: 1155 bytes
+    Version: 1
+    """
 
     _fields_ = [
+        ("header", PacketHeader),  # Header
         ("suspensionPosition", ctypes.c_float * 4),
         ("suspensionVelocity", ctypes.c_float * 4),
         ("suspensionAcceleration", ctypes.c_float * 4),
@@ -1082,18 +1085,6 @@ class MotionExData_V1(PackedLittleEndianStructure):
         ("angularAccelerationZ", ctypes.c_float),
         ("frontWheelsAngle", ctypes.c_float),
         ("wheelVertForce", ctypes.c_float * 4),
-    ]
-
-
-class PacketMotionEx_V1(PackedLittleEndianStructure):
-    """
-    Size: 1155 bytes
-    Version: 1
-    """
-
-    _fields_ = [
-        ("header", PacketHeader),  # Header
-		("motionExData", MotionExData_V1),
     ]
 
 
@@ -1119,8 +1110,8 @@ HeaderFieldsToPacketType = {
     (2023, 1, 9): PacketLobbyInfoData_V1,
     (2023, 1, 10): PacketCarDamageData_V1,
     (2023, 1, 11): PacketSessionHistoryData_V1,
-    (2023, 1, 12): TyreSetsData_V1,
-    (2023, 1, 13): MotionExData_V1,
+    (2023, 1, 12): PacketTyreSets_V1,
+    (2023, 1, 13): PacketMotionEx_V1,
 
 }
 
