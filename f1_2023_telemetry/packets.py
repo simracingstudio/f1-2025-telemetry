@@ -923,7 +923,7 @@ class CarDamageData_V1(PackedLittleEndianStructure):
     """This packet details car damage parameters for all the cars in the race"""
 
     _fields_ = [
-        ("tyresWear", ctypes.c_uint8 * 4),
+        ("tyresWear", ctypes.c_float * 4),
         ("tyresDamage", ctypes.c_uint8 * 4),
         ("brakesDamage", ctypes.c_uint8 * 4),
         ("frontLeftWingDamage", ctypes.c_uint8),
@@ -1030,7 +1030,7 @@ class TyreSetsData_V1(PackedLittleEndianStructure):
         ("recommendedSession", ctypes.c_uint8),
         ("lifeSpan", ctypes.c_uint8),
         ("usableLife", ctypes.c_uint8),
-        ("lapDeltaTime", ctypes.c_uint16),
+        ("lapDeltaTime", ctypes.c_int16),
         ("fitted", ctypes.c_uint8),
 
     ]
@@ -1045,8 +1045,7 @@ class PacketTyreSets_V1(PackedLittleEndianStructure):
     _fields_ = [
         ("header", PacketHeader),  # Header
 		("carIdx", ctypes.c_uint8),
-		("numLaps", ctypes.c_uint8),
-		("tyreSetsData", TyreSetsData_V1 * 8),
+		("tyreSetsData", TyreSetsData_V1 * 20),
         ("fittedIdx", ctypes.c_uint8),
     ]
 
