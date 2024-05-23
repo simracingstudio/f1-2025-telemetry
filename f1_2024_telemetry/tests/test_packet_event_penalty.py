@@ -1,7 +1,7 @@
 """
 Test event packet features related to penalties
 """
-from f1_2023_telemetry.packets import unpack_udp_packet
+from f1_2024_telemetry.packets import unpack_udp_packet
 
 
 def is_penalty(event_packet):

@@ -6,4 +6,4 @@ if [ -n $LOCAL_PYTHON3_BIN ] ; then
     export PATH=$LOCAL_PYTHON3_BIN:$PATH
 fi
 
-exec f1-2023-telemetry-monitor
+exec f1-2024-telemetry-monitor

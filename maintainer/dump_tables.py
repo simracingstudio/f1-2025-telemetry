@@ -1,18 +1,18 @@
 #! /usr/bin/env python3
 
-"""This script dumps the F1 2023 telemetry tables in ReST or MarkDown format."""
+"""This script dumps the F1 2024 telemetry tables in ReST or MarkDown format."""
 
 import os
 import sys
 import argparse
 
-# Make sure we import from the f1_2023_telemetry package inside the repository.
+# Make sure we import from the f1_2024_telemetry package inside the repository.
 sys.path.insert(
     0, os.path.abspath(os.path.join(os.path.dirname(sys.argv[0]), ".."))
 )
 
-from f1_2023_telemetry.packets import PacketID, EventStringCode
-from f1_2023_telemetry.types import (
+from f1_2024_telemetry.packets import PacketID, EventStringCode
+from f1_2024_telemetry.types import (
     ButtonFlag,
     DriverIDs,
     InfringementTypes,
@@ -232,12 +232,12 @@ def dump_tables(dump_table_func):
 
 
 def main():
-    """Dump F1 2023 tables in ReST or MarkDown format."""
+    """Dump F1 2024 tables in ReST or MarkDown format."""
 
     argparser = argparse.ArgumentParser
 
     parser = argparse.ArgumentParser(
-        description="Dump F1 2023 tables in format suitable for documentation."
+        description="Dump F1 2024 tables in format suitable for documentation."
     )
     parser.add_argument(
         "-f",

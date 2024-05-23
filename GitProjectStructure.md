@@ -10,5 +10,5 @@ Description of the top-level Git project files and directories
 | setup.py           | Setup file for creating distributions                     |
 | readthedocs.yaml   | Configuration file for Read the Docs                      |
 | docs/              | Documentation of the project (Sphinx-based)               |
-| f1_2023_telemetry/ | The main package of the project                           |
+| f1_2024_telemetry/ | The main package of the project                           |
 | maintainer/        | Information and useful scripts for the package maintainer |

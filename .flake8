@@ -4,8 +4,8 @@ exclude =
     dist,
     docs/source/*.py,
     maintainer/dump_tables.py,
-    f1_2023_telemetry/cli/*.py,
-    f1_2023_telemetry/gui/*.py
+    f1_2024_telemetry/cli/*.py,
+    f1_2024_telemetry/gui/*.py
 extend-ignore =
     # Black
     E203,

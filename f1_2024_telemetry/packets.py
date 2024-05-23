@@ -99,6 +99,7 @@ class PacketID(enum.IntEnum):
     SESSION_HISTORY = 11
     TYRE_SETS = 12
     MOTION_EX = 13
+    TIME_TRIAL = 14
 
 
     long_description: Dict[enum.IntEnum, str]
@@ -120,6 +121,7 @@ PacketID.short_description = {
     PacketID.SESSION_HISTORY: "Session History",
     PacketID.TYRE_SETS: "Tyre Sets",
     PacketID.MOTION_EX: "Motion Ex",
+    PacketID.TIME_TRIAL: "Time Trial",
 
 }
 
@@ -139,6 +141,7 @@ PacketID.long_description = {
     PacketID.SESSION_HISTORY: "Lap and tyre data for session",
     PacketID.TYRE_SETS: "Extended tyre set data",
     PacketID.MOTION_EX: "Extended motion data for player car",
+    PacketID.TIME_TRIAL: "Time Trial",
 
 }
 
@@ -252,7 +255,7 @@ class PacketSessionData_V1(PackedLittleEndianStructure):
         ("safetyCarStatus", ctypes.c_uint8),
         ("networkGame", ctypes.c_uint8),
         ("numWeatherForecastSamples", ctypes.c_uint8),
-        ("weatherForecastSamples", WeatherForecastSample * 56),
+        ("weatherForecastSamples", WeatherForecastSample * 64),
         ("forecastAccuracy", ctypes.c_uint8),
         ("aiDifficulty", ctypes.c_uint8),
         ("seasonLinkIdentifier", ctypes.c_uint32),
@@ -281,6 +284,35 @@ class PacketSessionData_V1(PackedLittleEndianStructure):
         ("numSafetyCarPeriods", ctypes.c_uint8),
         ("numVirtualSafetyCarPeriods", ctypes.c_uint8),
         ("numRedFlagPeriods", ctypes.c_uint8),
+
+        ("equalCarPerformance", ctypes.c_uint8), # 0 = Off, 1 = On
+        ("recoveryMode", ctypes.c_uint8), # 0 = None, 1 = Flashbacks, 2 = Auto-recovery
+        ("flashbackLimit", ctypes.c_uint8), # 0 = Low, 1 = Medium, 2 = High, 3 = Unlimited
+        ("surfaceType", ctypes.c_uint8), # 0 = Simplified, 1 = Realistic
+        ("lowFuelMode", ctypes.c_uint8), # 0 = Easy, 1 = Hard
+        ("raceStarts", ctypes.c_uint8), # 0 = Manual, 1 = Assisted
+        ("tyreTemperature", ctypes.c_uint8), # 0 = Surface only, 1 = Surface & Carcass
+        ("pitLaneTyreSim", ctypes.c_uint8), # 0 = On, 1 = Off
+        ("carDamage", ctypes.c_uint8), # 0 = Off, 1 = Reduced, 2 = Standard, 3 = Simulation
+        ("carDamageRate", ctypes.c_uint8), # 0 = Reduced, 1 = Standard, 2 = Simulation
+        ("collisions", ctypes.c_uint8), # 0 = Off, 1 = Player-to-Player Off, 2 = On
+        ("collisionsOffForFirstLapOnly", ctypes.c_uint8), # 0 = Disabled, 1 = Enabled
+        ("mpUnsafePitRelease", ctypes.c_uint8), # 0 = On, 1 = Off (Multiplayer)
+        ("mpOffForGriefing", ctypes.c_uint8), # 0 = Disabled, 1 = Enabled (Multiplayer)
+        ("cornerCuttingStringency", ctypes.c_uint8), # 0 = Regular, 1 = Strict
+        ("parcFermeRules", ctypes.c_uint8), # 0 = Off, 1 = On
+        ("pitStopExperience", ctypes.c_uint8), # 0 = Automatic, 1 = Broadcast, 2 = Immersive
+        ("safetyCar", ctypes.c_uint8), # 0 = Off, 1 = Reduced, 2 = Standard, 3 = Increased
+        ("safetyCarExperience", ctypes.c_uint8), # 0 = Broadcast, 1 = Immersive
+        ("formationLap", ctypes.c_uint8), # 0 = Off, 1 = On
+        ("formationLapExperience", ctypes.c_uint8), # 0 = Broadcast, 1 = Immersive
+        ("redFlags", ctypes.c_uint8), # 0 = Off, 1 = Reduced, 2 = Standard, 3 = Increased
+        ("affectsLicenceLevelSolo", ctypes.c_uint8), # 0 = Off, 1 = On
+        ("affectsLicenceLevelMP", ctypes.c_uint8), # 0 = Off, 1 = On
+        ("numSessionsInWeekend", ctypes.c_uint8), # Number of session in following array
+        ("weekendStructure", ctypes.c_uint8 * 12), # List of session types to show weekend
+        ("sector2LapDistanceStart", ctypes.c_float), # Distance in m around track where sector 2 starts
+        ("sector3LapDistanceStart", ctypes.c_float), # Distance in m around track where sector 3 starts
     ]
 
 
@@ -326,6 +358,8 @@ class LapData_V1(PackedLittleEndianStructure):
         ("pitLaneTimeinLaneinMS", ctypes.c_uint16),
         ("pitStopTimerinMS", ctypes.c_uint16),
         ("pitStopShouldServePen", ctypes.c_uint8),
+        ("speedTrapFastestSpeed", ctypes.c_float),
+        ("speedTrapFastestLa", ctypes.c_uint8),
 
     ]
 
@@ -447,6 +481,21 @@ class Overtake(PackedLittleEndianStructure):
         ("beingOvertakenVehicleIdx", ctypes.c_uint8),
     ]
 
+class SafetyCar(PackedLittleEndianStructure):
+
+    _fields_ = [
+        ("safetyCarType", ctypes.c_uint8),
+        ("eventType", ctypes.c_uint8),
+    ]
+
+class Collision(PackedLittleEndianStructure):
+
+    _fields_ = [
+        ("vehicle1Idx", ctypes.c_uint8),
+        ("vehicle2Idx", ctypes.c_uint8),
+    ]
+
+
 class EventDataDetails(ctypes.Union):
     """Union for the different event data types"""
 
@@ -463,7 +512,8 @@ class EventDataDetails(ctypes.Union):
         ("flashback", Flashback),
         ("buttons", Buttons),
         ("overtake", Overtake),
-
+        ("safetycar", SafetyCar),
+        ("collision", Collision),
     ]
 
 
@@ -514,6 +564,12 @@ class PacketEventData_V1(PackedLittleEndianStructure):
                 event_details = self.eventDetails.startLights
             elif event == "OVTK":
                 event_details = self.eventDetails.overtake
+            elif event == "SCAR":
+                event_details = self.eventDetails.safetycar
+            elif event == "COLL":
+                event_details = self.eventDetails.collision
+
+
 
             else:
                 raise RuntimeError(f"Bad event code {event}")
@@ -548,6 +604,8 @@ class EventStringCode(enum.Enum):
     FLBK = b"FLBK"
     BUTN = b"BUTN"
     OVTK = b"OVTK"
+    SCAR = b"SCAR"
+    COLL = b"COLL"
 
 
 
@@ -574,6 +632,8 @@ EventStringCode.short_description = {
     EventStringCode.FLBK: "Flashback",
     EventStringCode.BUTN: "Button status",
     EventStringCode.OVTK: "Overtake",
+    EventStringCode.SCAR: "Safety Car",
+    EventStringCode.COLL: "Collision",
 
 }
 
@@ -597,6 +657,8 @@ EventStringCode.long_description = {
     EventStringCode.FLBK: "Flashback activated",
     EventStringCode.BUTN: "Button status changed",
     EventStringCode.OVTK: "Overtake occurred",
+    EventStringCode.SCAR: "Safety car",
+    EventStringCode.COLL: "Collision",
 
 }
 
@@ -693,7 +755,8 @@ class PacketCarSetupData_V1(PackedLittleEndianStructure):
     """
 
     _fields_ = [("header", PacketHeader),
-                ("carSetups", CarSetupData_V1 * 22)]
+                ("carSetups", CarSetupData_V1 * 22),
+                ("nextFrontWingValue", ctypes.c_float)]
 
 
 ################################################################
@@ -1084,9 +1147,54 @@ class PacketMotionEx_V1(PackedLittleEndianStructure):
         ("angularAccelerationZ", ctypes.c_float),
         ("frontWheelsAngle", ctypes.c_float),
         ("wheelVertForce", ctypes.c_float * 4),
+        ("frontAeroHeight", ctypes.c_float),
+        ("rearAeroHeight", ctypes.c_float),
+        ("frontRollAngle", ctypes.c_float),
+        ("rearRollAngle", ctypes.c_float),
+        ("chassisYaw", ctypes.c_float),
     ]
 
 
+
+###############################################################
+#                                                             #
+#  ___________  Packet ID 14 : TimeTrialDataSet  _____  #
+#                                                             #
+###############################################################
+
+
+class TimeTrialDataSet_V1(PackedLittleEndianStructure):
+    """This packet contains lap times and tyre usage for the session"""
+
+    _fields_ = [
+        ("carIdx", ctypes.c_uint8),
+        ("teamId", ctypes.c_uint8),
+        ("lapTimeInMS", ctypes.c_uint32),
+        ("sector1TimeInMS", ctypes.c_uint32),
+        ("sector2TimeInMS", ctypes.c_uint32),
+        ("sector3TimeInMS", ctypes.c_uint32),
+        ("tractionControl", ctypes.c_uint8),
+        ("gearboxAssist", ctypes.c_int8),
+        ("antiLockBrakes", ctypes.c_uint8),
+        ("equalCarPerformance", ctypes.c_uint8),
+        ("customSetup", ctypes.c_uint8),
+        ("valid", ctypes.c_uint8),
+
+    ]
+
+
+class PacketTimeTrialDataSet_V1(PackedLittleEndianStructure):
+    """
+    Size: 101 bytes
+    Version: 1
+    """
+
+    _fields_ = [
+        ("header", PacketHeader),  # Header
+		("playerSessionBestDataSet", TimeTrialDataSet_V1),
+		("personalBestDataSet", TimeTrialDataSet_V1),
+        ("rivalDataSet", TimeTrialDataSet_V1),
+    ]
 
 
 ##################################
@@ -1097,20 +1205,21 @@ class PacketMotionEx_V1(PackedLittleEndianStructure):
 
 # Map from (packetFormat, packetVersion, packetId) to a specific packet type.
 HeaderFieldsToPacketType = {
-    (2023, 1, 0): PacketMotionData_V1,
-    (2023, 1, 1): PacketSessionData_V1,
-    (2023, 1, 2): PacketLapData_V1,
-    (2023, 1, 3): PacketEventData_V1,
-    (2023, 1, 4): PacketParticipantsData_V1,
-    (2023, 1, 5): PacketCarSetupData_V1,
-    (2023, 1, 6): PacketCarTelemetryData_V1,
-    (2023, 1, 7): PacketCarStatusData_V1,
-    (2023, 1, 8): PacketFinalClassificationData_V1,
-    (2023, 1, 9): PacketLobbyInfoData_V1,
-    (2023, 1, 10): PacketCarDamageData_V1,
-    (2023, 1, 11): PacketSessionHistoryData_V1,
-    (2023, 1, 12): PacketTyreSets_V1,
-    (2023, 1, 13): PacketMotionEx_V1,
+    (2024, 1, 0): PacketMotionData_V1,
+    (2024, 1, 1): PacketSessionData_V1,
+    (2024, 1, 2): PacketLapData_V1,
+    (2024, 1, 3): PacketEventData_V1,
+    (2024, 1, 4): PacketParticipantsData_V1,
+    (2024, 1, 5): PacketCarSetupData_V1,
+    (2024, 1, 6): PacketCarTelemetryData_V1,
+    (2024, 1, 7): PacketCarStatusData_V1,
+    (2024, 1, 8): PacketFinalClassificationData_V1,
+    (2024, 1, 9): PacketLobbyInfoData_V1,
+    (2024, 1, 10): PacketCarDamageData_V1,
+    (2024, 1, 11): PacketSessionHistoryData_V1,
+    (2024, 1, 12): PacketTyreSets_V1,
+    (2024, 1, 13): PacketMotionEx_V1,
+    (2024, 1, 14): PacketTimeTrialDataSet_V1,
 
 }
 
