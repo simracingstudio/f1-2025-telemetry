@@ -683,6 +683,7 @@ class ParticipantData_V1(PackedLittleEndianStructure):
         ("name", ctypes.c_char * 48),
         ("yourTelemetry", ctypes.c_uint8),
         ("showOnlineNames", ctypes.c_uint8),
+        ("techLevel", ctypes.c_uint16),
         ("platform", ctypes.c_uint8),
 
     ]
