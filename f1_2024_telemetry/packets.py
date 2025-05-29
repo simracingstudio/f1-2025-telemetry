@@ -100,6 +100,7 @@ class PacketID(enum.IntEnum):
     TYRE_SETS = 12
     MOTION_EX = 13
     TIME_TRIAL = 14
+    LAP_POSITIONS = 15
 
 
     long_description: Dict[enum.IntEnum, str]
@@ -122,7 +123,7 @@ PacketID.short_description = {
     PacketID.TYRE_SETS: "Tyre Sets",
     PacketID.MOTION_EX: "Motion Ex",
     PacketID.TIME_TRIAL: "Time Trial",
-
+    PacketID.LAP_POSITIONS: "Lap Positions",
 }
 
 
@@ -141,8 +142,8 @@ PacketID.long_description = {
     PacketID.SESSION_HISTORY: "Lap and tyre data for session",
     PacketID.TYRE_SETS: "Extended tyre set data",
     PacketID.MOTION_EX: "Extended motion data for player car",
-    PacketID.TIME_TRIAL: "Time Trial",
-
+    PacketID.TIME_TRIAL: "Time Trial specific data",
+    PacketID.LAP_POSITIONS: "Lap positions on each lap so a chart can be constructed",
 }
 
 #########################################################
@@ -392,7 +393,7 @@ class FastestLapData(PackedLittleEndianStructure):
     """Event data for fastest lap (FTLP)"""
 
     _fields_ = [
-        ("vehicleIdx", ctypes.c_uint8),  # Vehicle index of car
+        ("vehicleIdx", ctypes.c_uint8),  # Vehicle index of car achieving fastest lap
         ("lapTime", ctypes.c_float),  # Lap time is in seconds
     ]
 
@@ -400,7 +401,15 @@ class RetirementData(PackedLittleEndianStructure):
     """Event data for retirement (RTMT)"""
 
     _fields_ = [
-        ("vehicleIdx", ctypes.c_uint8),
+        ("vehicleIdx", ctypes.c_uint8),  # Vehicle index of car retiring
+        ("reason", ctypes.c_uint8),  # Result reason - 0 = invalid, 1 = retired, 2 = finished, 3 = terminal damage, 4 = inactive, 5 = not enough laps completed, 6 = black flagged, 7 = red flagged, 8 = mechanical failure, 9 = session skipped, 10 = session simulated
+    ]
+
+class DRSDisabledData(PackedLittleEndianStructure):
+    """Event data for DRS disabled (DRSD)"""
+
+    _fields_ = [
+        ("reason", ctypes.c_uint8),  # 0 = Wet track, 1 = Safety car deployed, 2 = Red flag, 3 = Min lap not reached
     ]
 
 class TeamMateInPitsData(PackedLittleEndianStructure):
@@ -459,6 +468,7 @@ class StopGoPenaltyServed(PackedLittleEndianStructure):
 
     _fields_ = [
         ("vehicleIdx", ctypes.c_uint8),
+        ("stopTime", ctypes.c_float),
     ]
 
 class Flashback(PackedLittleEndianStructure):
@@ -668,6 +678,15 @@ EventStringCode.long_description = {
 #                                                             #
 ###############################################################
 
+class LiveryColour(PackedLittleEndianStructure):
+    """This type is used for the 4-element 'liveryColour' array of the ParticipantData_V1 type, defined below."""
+
+    _fields_ = [
+        ("red", ctypes.c_uint8),
+        ("green", ctypes.c_uint8),
+        ("blue", ctypes.c_uint8),
+    ]
+
 
 class ParticipantData_V1(PackedLittleEndianStructure):
     """This type is used for the 22-element 'participants' array of the PacketParticipantsData_V1 type, defined below."""
@@ -680,12 +699,13 @@ class ParticipantData_V1(PackedLittleEndianStructure):
         ("myTeam", ctypes.c_uint8),
         ("raceNumber", ctypes.c_uint8),
         ("nationality", ctypes.c_uint8),
-        ("name", ctypes.c_char * 48),
+        ("name", ctypes.c_char * 32),
         ("yourTelemetry", ctypes.c_uint8),
         ("showOnlineNames", ctypes.c_uint8),
         ("techLevel", ctypes.c_uint16),
         ("platform", ctypes.c_uint8),
-
+        ("numColours", ctypes.c_uint8),
+        ("liveryColour", LiveryColour * 4),
     ]
 
 
@@ -914,6 +934,7 @@ class FinalClassificationData_V1(PackedLittleEndianStructure):
         ("points", ctypes.c_uint8),
         ("numPitStops", ctypes.c_uint8),
         ("resultStatus", ctypes.c_uint8),
+        ("resultReason", ctypes.c_uint8),
         ("bestLapTime", ctypes.c_float),
         ("totalRaceTime", ctypes.c_double),
         ("penaltiesTime", ctypes.c_uint8),
@@ -957,7 +978,7 @@ class LobbyInfoData_V1(PackedLittleEndianStructure):
         ("teamId", ctypes.c_uint8),
         ("nationality", ctypes.c_uint8),
         ("platform", ctypes.c_uint8),
-        ("name", ctypes.c_char * 48),
+        ("name", ctypes.c_char * 32),
         ("carNumber", ctypes.c_uint8),
         ("readyStatus", ctypes.c_uint8),
     ]
@@ -991,6 +1012,7 @@ class CarDamageData_V1(PackedLittleEndianStructure):
         ("tyresWear", ctypes.c_float * 4),
         ("tyresDamage", ctypes.c_uint8 * 4),
         ("brakesDamage", ctypes.c_uint8 * 4),
+        ("tyreBlisters", ctypes.c_uint8 * 4),
         ("frontLeftWingDamage", ctypes.c_uint8),
         ("frontRightWingDamage", ctypes.c_uint8),
         ("rearWingDamage", ctypes.c_uint8),
@@ -1123,7 +1145,7 @@ class PacketTyreSets_V1(PackedLittleEndianStructure):
 
 class PacketMotionEx_V1(PackedLittleEndianStructure):
     """
-    Size: 1155 bytes
+    Size: 273 bytes
     Version: 1
     """
 
@@ -1154,6 +1176,9 @@ class PacketMotionEx_V1(PackedLittleEndianStructure):
         ("frontRollAngle", ctypes.c_float),
         ("rearRollAngle", ctypes.c_float),
         ("chassisYaw", ctypes.c_float),
+        ("chassisPitch", ctypes.c_float),
+        ("wheelCamber", ctypes.c_float * 4),
+        ("wheelCamberGain", ctypes.c_float * 4),
     ]
 
 
@@ -1198,6 +1223,25 @@ class PacketTimeTrialDataSet_V1(PackedLittleEndianStructure):
         ("rivalDataSet", TimeTrialDataSet_V1),
     ]
 
+###############################################################
+#                                                             #
+#  ___________  Packet ID 15 : LAP POSITIONS PACKET  _______  #
+#                                                             #
+###############################################################
+
+class PacketLapPositions_V1(PackedLittleEndianStructure):
+    """
+    Size: 1131 bytes
+    Version: 1
+    """
+
+    _fields_ = [
+        ("header", PacketHeader),
+        ("numLaps", ctypes.c_uint8),
+        ("lapStarts", ctypes.c_uint8),
+        ("positionForVehiclesIdx", ctypes.c_uint8 * 50 * 22),
+    ]
+
 
 ##################################
 #                                #
@@ -1207,22 +1251,22 @@ class PacketTimeTrialDataSet_V1(PackedLittleEndianStructure):
 
 # Map from (packetFormat, packetVersion, packetId) to a specific packet type.
 HeaderFieldsToPacketType = {
-    (2024, 1, 0): PacketMotionData_V1,
-    (2024, 1, 1): PacketSessionData_V1,
-    (2024, 1, 2): PacketLapData_V1,
-    (2024, 1, 3): PacketEventData_V1,
-    (2024, 1, 4): PacketParticipantsData_V1,
-    (2024, 1, 5): PacketCarSetupData_V1,
-    (2024, 1, 6): PacketCarTelemetryData_V1,
-    (2024, 1, 7): PacketCarStatusData_V1,
-    (2024, 1, 8): PacketFinalClassificationData_V1,
-    (2024, 1, 9): PacketLobbyInfoData_V1,
-    (2024, 1, 10): PacketCarDamageData_V1,
-    (2024, 1, 11): PacketSessionHistoryData_V1,
-    (2024, 1, 12): PacketTyreSets_V1,
-    (2024, 1, 13): PacketMotionEx_V1,
-    (2024, 1, 14): PacketTimeTrialDataSet_V1,
-
+    (2025, 1, 0): PacketMotionData_V1,
+    (2025, 1, 1): PacketSessionData_V1,
+    (2025, 1, 2): PacketLapData_V1,
+    (2025, 1, 3): PacketEventData_V1,
+    (2025, 1, 4): PacketParticipantsData_V1,
+    (2025, 1, 5): PacketCarSetupData_V1,
+    (2025, 1, 6): PacketCarTelemetryData_V1,
+    (2025, 1, 7): PacketCarStatusData_V1,
+    (2025, 1, 8): PacketFinalClassificationData_V1,
+    (2025, 1, 9): PacketLobbyInfoData_V1,
+    (2025, 1, 10): PacketCarDamageData_V1,
+    (2025, 1, 11): PacketSessionHistoryData_V1,
+    (2025, 1, 12): PacketTyreSets_V1,
+    (2025, 1, 13): PacketMotionEx_V1,
+    (2025, 1, 14): PacketTimeTrialDataSet_V1,
+    (2025, 1, 15): PacketLapPositions_V1,
 }
 
 class UnpackError(Exception):

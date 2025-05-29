@@ -12,7 +12,7 @@ with open("README.md") as fi:
 packages = find_packages()
 
 setup(
-    name="f1-2024-telemetry",
+    name="f1-2025-telemetry",
     version="0.0.1",
     author="Guillaume Parent",
     author_email="gp@gparent.net",
