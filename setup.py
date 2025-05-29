@@ -16,13 +16,13 @@ setup(
     version="0.0.1",
     author="Guillaume Parent",
     author_email="gp@gparent.net",
-    description="A package to handle UDP telemetry data as sent by the F1 2024 game.",
+    description="A package to handle UDP telemetry data as sent by the F1 2025 game.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://pypi.org/project/f1-2024-telemetry/",
+    url="https://pypi.org/project/f1-2025-telemetry/",
     project_urls={
-        "Documentation": "https://f1-2024-telemetry.readthedocs.io/en/latest/",
-        "Source Repository": "https://gitlab.com/simracingstudio/f1-2024-telemetry",
+        "Documentation": "https://f1-2025-telemetry.readthedocs.io/en/latest/",
+        "Source Repository": "https://gitlab.com/simracingstudio/f1-2025-telemetry",
     },
     packages=packages,
     entry_points={
