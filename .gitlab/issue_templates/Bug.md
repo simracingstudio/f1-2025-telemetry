@@ -1,6 +1,6 @@
 **Before opening a new issue**
-* [ ] Search [existing issues](https://gitlab.com/gparent/f1-2024-telemetry/-/issues?scope=all) for keywords related to the problem
-* [ ] Read the [documentation](https://f1-2024-telemetry.readthedocs.io/en/stable/)
+* [ ] Search [existing issues](https://gitlab.com/gparent/f1-2025-telemetry/-/issues?scope=all) for keywords related to the problem
+* [ ] Read the [documentation](https://f1-2025-telemetry.readthedocs.io/en/stable/)
 * [ ] Test your issue with the latest master branch if possible
 
 **Problem description**

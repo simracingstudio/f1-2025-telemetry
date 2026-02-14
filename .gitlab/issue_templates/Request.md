@@ -1,6 +1,6 @@
 **Before opening a new feature request**
-* [ ] Search [existing issues](https://gitlab.com/gparent/f1-2024-telemetry/-/issues?scope=all) for keywords related to the feature
-* [ ] Read the [latest documentation](https://f1-2024-telemetry.readthedocs.io/en/latest/) to make sure it doesn't exist already
+* [ ] Search [existing issues](https://gitlab.com/gparent/f1-2025-telemetry/-/issues?scope=all) for keywords related to the feature
+* [ ] Read the [latest documentation](https://f1-2025-telemetry.readthedocs.io/en/latest/) to make sure it doesn't exist already
 * [ ] Test with the master branch if possible
 
 **Feature description**
